@@ -7,6 +7,9 @@
   // jest
   "jest.autoRun": "off",
 
+  // emmet tips order under unocss tips
+  "emmet.showSuggestionsAsSnippets": true,
+
   // vscode cpu limit
   "search.followSymlinks": false, // close search
 

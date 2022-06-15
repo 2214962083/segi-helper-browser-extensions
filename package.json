@@ -25,6 +25,7 @@
     "watch": "vite build --watch"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.4",
     "@vue/runtime-dom": "^3.2.37",
     "@vueuse/core": "^8.6.0",
     "crypto-js": "^4.1.1",

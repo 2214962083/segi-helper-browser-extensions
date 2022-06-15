@@ -5,6 +5,7 @@ packageExtensionsChecksum: 052eb061807f069ac44d06ee105e968e
 specifiers:
   '@commitlint/cli': ^16.2.3
   '@commitlint/config-conventional': ^16.2.1
+  '@element-plus/icons-vue': ^2.0.4
   '@samrum/vite-plugin-web-extension': ^1.0.2
   '@types/crypto-js': ^4.1.1
   '@types/download': ^8.0.1
@@ -69,6 +70,7 @@ specifiers:
   webextension-polyfill: ^0.9.0
 
 dependencies:
+  '@element-plus/icons-vue': 2.0.4_vue@3.2.37
   '@vue/runtime-dom': 3.2.37
   '@vueuse/core': 8.6.0_vue@3.2.37
   crypto-js: 4.1.1
@@ -783,6 +785,14 @@ packages:
       node-forge: 0.10.0
       split: 0.3.3
     dev: true
+
+  /@element-plus/icons-vue/2.0.4_vue@3.2.37:
+    resolution: {integrity: sha512-UeBVBU3fuBsYa9mzM7DgkRztQ1Aftw3sMTI/1gZsqXq2NWiCOi16ZYXXGIc0jFDIu+k6SojzdlxOjv+rN/Y6FQ==}
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      vue: 3.2.37
+    dev: false
 
   /@element-plus/icons-vue/2.0.5_vue@3.2.37:
     resolution: {integrity: sha512-jvNWyKcdvPvMDLTWjghrPY+bYHKqh7hbAFIPe+HWR073zilzt33csREzmKx3VwhdlJUW5u0nCqN+0rwI8jlH+w==}
