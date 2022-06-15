@@ -20,8 +20,8 @@
     "release": "esno ./scripts/release.ts",
     "serve:firefox": "web-ext run --start-url \"http://beta.uhomecp.com/web/portal/#/home\"  --source-dir ./dist/",
     "serve:chrome": "web-ext run -t chromium --start-url \"http://beta.uhomecp.com/web/portal/#/home\" --source-dir ./dist/",
-    "start:firefox": "concurrently \"npm:dev\" \"npm:serve:firefox\" ",
-    "start:chrome": "concurrently \"npm:dev\" \"npm:serve:chrome\" ",
+    "start:firefox": "concurrently \"npm:watch\" \"npm:serve:firefox\" ",
+    "start:chrome": "concurrently \"npm:watch\" \"npm:serve:chrome\" ",
     "watch": "vite build --watch"
   },
   "dependencies": {
