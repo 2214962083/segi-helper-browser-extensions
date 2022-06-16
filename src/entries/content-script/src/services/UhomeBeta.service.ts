@@ -11,6 +11,7 @@ export class UhomeBetaService {
    */
   @OnMessage(WebextMessageId.searchBetaMenu)
   searchBetaMenu(options: FindMenusOptions) {
+    console.log('searchBetaMenu', options)
     return findMenus(options)
   }
 }

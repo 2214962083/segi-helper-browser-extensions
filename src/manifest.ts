@@ -9,12 +9,14 @@ interface SharedManifest {
   externally_connectable: chrome.runtime.ManifestBase['externally_connectable']
 }
 
+const allowUrls = ['*://*/*']
+
 // 共用配置
 const sharedManifest: SharedManifest = {
   content_scripts: [
     {
       js: ['src/entries/content-script/index.ts'], // 向 window 注入 js 文件
-      matches: ['*://*/*'], // 匹配的网址
+      matches: [...allowUrls], // 匹配的网址
       run_at: 'document_end' // 执行时机
     }
   ],
@@ -37,10 +39,16 @@ const sharedManifest: SharedManifest = {
     open_in_tab: true // 是否在新标签页打开
   },
   // 权限列表
-  permissions: ['storage', 'tabs', 'contextMenus', 'notifications'],
+  permissions: ['storage', 'tabs', 'contextMenus', 'notifications', 'activeTab'],
   // 声明哪些扩展、app、网页可以连接此扩展通信
   externally_connectable: {
-    matches: ['*://*/*']
+    ids: ['*'],
+    matches: [
+      // chrome 任性，一定要指定明确的顶级域名
+      '*://*.uhomecp.com/*',
+      ...allowUrls
+    ],
+    accepts_tls_channel_id: false
   }
 }
 
@@ -68,7 +76,7 @@ const ManifestV2 = {
     ...sharedManifest.options_ui,
     chrome_style: false // 不添加默认样式
   },
-  permissions: [...sharedManifest.permissions, '*://*/*']
+  permissions: [...sharedManifest.permissions, ...allowUrls]
 } as chrome.runtime.ManifestV2
 
 // 第三版扩展配置
@@ -78,7 +86,7 @@ const ManifestV3 = {
   background: {
     service_worker: 'src/entries/background/serviceWorker.ts'
   },
-  host_permissions: ['*://*/*']
+  host_permissions: [...allowUrls]
 } as chrome.runtime.ManifestV3
 
 export function getManifest(manifestVersion: number): chrome.runtime.ManifestV2 | chrome.runtime.ManifestV3 {
@@ -90,6 +98,8 @@ export function getManifest(manifestVersion: number): chrome.runtime.ManifestV2 
   }
 
   if (manifestVersion === 2) {
+    // 兼容性好，不过 2023 的 chrome 就不支持了
+    // https://developer.chrome.com/blog/mv2-transition/
     return {
       ...manifest,
       ...ManifestV2,
@@ -98,6 +108,7 @@ export function getManifest(manifestVersion: number): chrome.runtime.ManifestV2 
   }
 
   if (manifestVersion === 3) {
+    // 兼容性不好，暂时用 v2
     return {
       ...manifest,
       ...ManifestV3,

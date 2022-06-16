@@ -1,3 +1,5 @@
+import {fetchMenuList} from '@/common/apis/uhomeBeta'
+
 /**
  * 远程获取的菜单格式
  */
@@ -121,12 +123,6 @@ export async function findMenus({
     type PrivateMenu = BetaMenu & RemoteBetaMenu
 
     // 获取远程菜单
-    const fetchUrl = `/authc-restapi/portal/menuList?_t=${Date.now()}`
-    const fetchMenuList = (): Promise<RemoteBetaMenu[]> =>
-      fetch(fetchUrl)
-        .then(res => res.json())
-        .then(res => res.data.menuList.child)
-
     const menuList = _list ? _list : await fetchMenuList()
     const findResult: PrivateMenu[] = []
 

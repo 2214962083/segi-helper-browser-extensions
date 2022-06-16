@@ -1,10 +1,9 @@
-// import {onMessage} from 'webext-bridge'
-import browser from 'webextension-polyfill'
-import {WebextMessageId} from '@/common/utils/message-types'
+import {allowWindowMessaging} from 'webext-bridge'
+import './src/services' // 初始化 services
 
-// import './src/services'
-// onMessage(WebextMessageId.searchBetaMenu, ({data}) => {
-//   console.log('onMessage', data)
-// })
-console.log('browser.runtime', browser.runtime)
-console.log('content-script main.ts')
+// Firefox `browser.tabs.executeScript()` 要求脚本返回原始值
+;(() => {
+  console.log('content-script init')
+
+  allowWindowMessaging('BetaContentScript')
+})()

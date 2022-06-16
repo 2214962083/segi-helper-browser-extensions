@@ -25,13 +25,14 @@
 
 <script setup lang="ts">
 import {ref} from 'vue'
-// import {watchDebounced} from '@vueuse/core'
+import {watchDebounced} from '@vueuse/core'
 import MyMenu from '@/common/components/menu.vue'
 import {Menu} from '@/common/components/menu.type'
 import {SelectOption} from '@/common/utils/type-helper'
 import {Search} from '@element-plus/icons-vue'
-// import {sendMessage} from 'webext-bridge'
-// import {WebextMessageId} from '@/common/utils/message-types'
+import {sendMessage} from 'webext-bridge'
+import {WebextMessageId} from '@/common/utils/message-types'
+import browser from 'webextension-polyfill'
 
 const menuActive = ref('searchBetaMenu')
 const menus = ref<Menu[]>([
@@ -68,27 +69,28 @@ const searchTypes = ref<SelectOption[]>([
 
 async function search() {
   console.log('search')
-  // return sendMessage(
-  //   // WebextMessageId.searchBetaMenu,
-  //   [
-  //     {
-  //       url: searchType.value === 'url' ? searchKeywords.value : '',
-  //       name: searchType.value === 'menuName' ? searchKeywords.value : ''
-  //     }
-  //   ],
-  //   'content-script'
-  // )
+  const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0]
+  return sendMessage(
+    WebextMessageId.searchBetaMenu,
+    [
+      {
+        url: searchType.value === 'url' ? searchKeywords.value : '',
+        name: searchType.value === 'menuName' ? searchKeywords.value : ''
+      }
+    ],
+    {context: 'content-script', tabId: tab.id!}
+  )
 }
 
-// watchDebounced(
-//   [searchKeywords, searchType],
-//   () => {
-//     search().then(res => {
-//       console.log('搜索结果', res)
-//     })
-//   },
-//   {debounce: 500, maxWait: 1000}
-// )
+watchDebounced(
+  [searchKeywords, searchType],
+  () => {
+    search().then(res => {
+      console.log('搜索结果', res)
+    })
+  },
+  {debounce: 500, maxWait: 1000}
+)
 </script>
 
 <style scoped></style>

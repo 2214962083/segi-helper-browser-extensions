@@ -15,7 +15,10 @@ export function OnMessage(id: string): MethodDecorator {
 
     if (typeof method === 'function') {
       console.log(`[OnMessage] ${id}`)
-      onMessage(id, ({data}) => method(...data))
+      onMessage(id, ({data}) => {
+        console.log(`[OnMessage] ${id}`, data, method)
+        return method(...data)
+      })
     }
   }
 }
