@@ -51,6 +51,7 @@ specifiers:
   redrun: ^10.0.1
   rimraf: ^3.0.2
   safe-compare: ^1.1.4
+  stoor: ^2.3.1
   stylelint: ^14.7.0
   stylelint-config-prettier: ^9.0.3
   stylelint-config-recess-order: ^3.0.0
@@ -76,6 +77,7 @@ dependencies:
   crypto-js: 4.1.1
   element-plus: 2.2.5_vue@3.2.37
   qrcode: 1.5.0
+  stoor: 2.3.1
   vue: 3.2.37
   webext-bridge: 5.0.4
   webextension-polyfill: 0.9.0
@@ -9951,6 +9953,10 @@ packages:
     resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
     engines: {node: '>= 0.8'}
     dev: true
+
+  /stoor/2.3.1:
+    resolution: {integrity: sha512-E1Frvvgp+uXHTc/vs6iZ9d1CX3YemC+kMecORFizrpNdxMTBZPeDzCtlxFoWkBo8LzoJcQv7Pa+RUc6k62JFSQ==}
+    dev: false
 
   /stream-shift/1.0.1:
     resolution: {integrity: sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==}

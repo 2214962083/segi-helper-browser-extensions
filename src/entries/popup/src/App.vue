@@ -25,33 +25,30 @@
 
 <script setup lang="ts">
 import {ref} from 'vue'
+// import {watchDebounced} from '@vueuse/core'
 import MyMenu from '@/common/components/menu.vue'
 import {Menu} from '@/common/components/menu.type'
 import {SelectOption} from '@/common/utils/type-helper'
 import {Search} from '@element-plus/icons-vue'
+// import {sendMessage} from 'webext-bridge'
+// import {WebextMessageId} from '@/common/utils/message-types'
 
-const menuActive = ref('2-2')
+const menuActive = ref('searchBetaMenu')
 const menus = ref<Menu[]>([
   {
-    key: '1',
-    title: '首页'
+    key: 'searchBetaMenu',
+    title: '搜索 beta 菜单'
   },
   {
-    key: '2',
-    title: '设置',
-    children: [
-      {
-        key: '2-1',
-        title: '设置1'
-      },
-      {
-        key: '2-2',
-        title: '设置2'
-      }
-    ]
+    key: 'collectBetaMenu',
+    title: 'beta 收藏菜单'
   },
   {
-    key: '3',
+    key: 'settings',
+    title: '设置'
+  },
+  {
+    key: 'about',
     title: '关于'
   }
 ])
@@ -68,6 +65,30 @@ const searchTypes = ref<SelectOption[]>([
     label: '菜单名称'
   }
 ])
+
+async function search() {
+  console.log('search')
+  // return sendMessage(
+  //   // WebextMessageId.searchBetaMenu,
+  //   [
+  //     {
+  //       url: searchType.value === 'url' ? searchKeywords.value : '',
+  //       name: searchType.value === 'menuName' ? searchKeywords.value : ''
+  //     }
+  //   ],
+  //   'content-script'
+  // )
+}
+
+// watchDebounced(
+//   [searchKeywords, searchType],
+//   () => {
+//     search().then(res => {
+//       console.log('搜索结果', res)
+//     })
+//   },
+//   {debounce: 500, maxWait: 1000}
+// )
 </script>
 
 <style scoped></style>

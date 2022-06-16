@@ -4,9 +4,3 @@ declare module '*.vue' {
   const Component: DefineComponent<{}, {}, any>
   export default Component
 }
-
-declare module 'webext-bridge' {
-  export interface ProtocolMap {
-    foo: string
-  }
-}

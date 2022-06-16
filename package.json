@@ -31,6 +31,7 @@
     "crypto-js": "^4.1.1",
     "element-plus": "^2.2.5",
     "qrcode": "^1.5.0",
+    "stoor": "^2.3.1",
     "vue": "^3.2.37",
     "webext-bridge": "^5.0.4",
     "webextension-polyfill": "^0.9.0"

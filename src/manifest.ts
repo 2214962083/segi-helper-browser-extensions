@@ -1,18 +1,21 @@
 import pkg from '../package.json'
 
 interface SharedManifest {
+  homepage_url?: string // 插件主页
   content_scripts: chrome.runtime.ManifestBase['content_scripts']
   icons: chrome.runtime.ManifestIcons
   options_ui: chrome.runtime.ManifestBase['options_ui']
   permissions: chrome.runtime.ManifestPermissions[]
+  externally_connectable: chrome.runtime.ManifestBase['externally_connectable']
 }
 
 // 共用配置
 const sharedManifest: SharedManifest = {
   content_scripts: [
     {
-      js: ['src/entries/content-script/index.ts'], // 入口文件
-      matches: ['*://*/*']
+      js: ['src/entries/content-script/index.ts'], // 向 window 注入 js 文件
+      matches: ['*://*/*'], // 匹配的网址
+      run_at: 'document_end' // 执行时机
     }
   ],
   // 扩展图标
@@ -34,7 +37,11 @@ const sharedManifest: SharedManifest = {
     open_in_tab: true // 是否在新标签页打开
   },
   // 权限列表
-  permissions: ['storage']
+  permissions: ['storage', 'tabs', 'contextMenus', 'notifications'],
+  // 声明哪些扩展、app、网页可以连接此扩展通信
+  externally_connectable: {
+    matches: ['*://*/*']
+  }
 }
 
 // 扩展左上角气泡 ui
@@ -59,10 +66,10 @@ const ManifestV2 = {
   browser_action: browserAction,
   options_ui: {
     ...sharedManifest.options_ui,
-    chrome_style: false
+    chrome_style: false // 不添加默认样式
   },
   permissions: [...sharedManifest.permissions, '*://*/*']
-}
+} as chrome.runtime.ManifestV2
 
 // 第三版扩展配置
 const ManifestV3 = {
@@ -72,7 +79,7 @@ const ManifestV3 = {
     service_worker: 'src/entries/background/serviceWorker.ts'
   },
   host_permissions: ['*://*/*']
-}
+} as chrome.runtime.ManifestV3
 
 export function getManifest(manifestVersion: number): chrome.runtime.ManifestV2 | chrome.runtime.ManifestV3 {
   const manifest = {
