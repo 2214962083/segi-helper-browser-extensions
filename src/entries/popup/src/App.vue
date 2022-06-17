@@ -1,96 +1,62 @@
 <template>
-  <div w-150 h-150 p-4 flex flex-col rounded border border-gray relative overflow-hidden>
-    <div absolute top-0 left-0 z-10 w-full>
+  <div class="w-150 p-4 h-screen rounded relative overflow-hidden text-gray-700">
+    <div class="absolute top-0 left-0 z-10 w-full">
       <!-- 顶部菜单 -->
-      <MyMenu :default-active="menuActive" :menus="menus"></MyMenu>
+      <MyMenu
+        class="w-full"
+        :default-active="menuActive"
+        :ellipsis="false"
+        :menus="menus"
+        @select="handleSelectMenu"
+      ></MyMenu>
     </div>
-    <div class="blank" w-full h-10></div>
-    <div>
-      <!-- 搜索框 -->
-      <el-input v-model="searchKeywords" placeholder="请输入搜索关键词" :suffix-icon="Search">
-        <template #prepend>
-          <el-select v-model="searchType" placeholder="搜索方式" style="width: 115px">
-            <el-option v-for="option in searchTypes" :key="option.value" :label="option.label" :value="option.value" />
-          </el-select>
-        </template>
-      </el-input>
-
-      <!-- 列表 -->
-      <div mt-4 flex flex-col w-full>
-        <div w-full p-4 border border-gray rounded h-10 flex items-center>共享单据>>共享单据模板>>共享单据模板列表</div>
-      </div>
-    </div>
+    <div class="blank w-full h-8"></div>
+    <SearchMenu v-show="menuActive === MenuKey.searchUhomecpMenu"></SearchMenu>
+    <CollectMenu v-show="menuActive === MenuKey.collectUhomecpMenu"></CollectMenu>
+    <Settings v-show="menuActive === MenuKey.settings"></Settings>
+    <About v-show="menuActive === MenuKey.about"></About>
   </div>
 </template>
 
 <script setup lang="ts">
 import {ref} from 'vue'
-import {watchDebounced} from '@vueuse/core'
 import MyMenu from '@/common/components/menu.vue'
 import {Menu} from '@/common/components/menu.type'
-import {SelectOption} from '@/common/utils/type-helper'
-import {Search} from '@element-plus/icons-vue'
-import {sendMessage} from 'webext-bridge'
-import {WebextMessageId} from '@/common/utils/message-types'
-import browser from 'webextension-polyfill'
+import SearchMenu from './views/tabs/SearchMenu.vue'
+import CollectMenu from './views/tabs/CollectMenu.vue'
+import Settings from './views/tabs/Settings.vue'
+import About from './views/tabs/About.vue'
 
-const menuActive = ref('searchBetaMenu')
+enum MenuKey {
+  searchUhomecpMenu = 'searchUhomecpMenu',
+  collectUhomecpMenu = 'collectUhomecpMenu',
+  settings = 'settings',
+  about = 'about'
+}
+
+const menuActive = ref(MenuKey.searchUhomecpMenu)
 const menus = ref<Menu[]>([
   {
-    key: 'searchBetaMenu',
-    title: '搜索 beta 菜单'
+    key: MenuKey.searchUhomecpMenu,
+    title: '搜索菜单'
   },
   {
-    key: 'collectBetaMenu',
-    title: 'beta 收藏菜单'
+    key: MenuKey.collectUhomecpMenu,
+    title: '收藏菜单'
   },
   {
-    key: 'settings',
+    key: MenuKey.settings,
     title: '设置'
   },
   {
-    key: 'about',
+    key: MenuKey.about,
     title: '关于'
   }
 ])
 
-const searchKeywords = ref('')
-const searchType = ref('url')
-const searchTypes = ref<SelectOption[]>([
-  {
-    value: 'url',
-    label: 'iframe url'
-  },
-  {
-    value: 'menuName',
-    label: '菜单名称'
-  }
-])
-
-async function search() {
-  console.log('search')
-  const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0]
-  return sendMessage(
-    WebextMessageId.searchBetaMenu,
-    [
-      {
-        url: searchType.value === 'url' ? searchKeywords.value : '',
-        name: searchType.value === 'menuName' ? searchKeywords.value : ''
-      }
-    ],
-    {context: 'content-script', tabId: tab.id!}
-  )
+function handleSelectMenu(menuKey: MenuKey) {
+  menuActive.value = menuKey
 }
-
-watchDebounced(
-  [searchKeywords, searchType],
-  () => {
-    search().then(res => {
-      console.log('搜索结果', res)
-    })
-  },
-  {debounce: 500, maxWait: 1000}
-)
 </script>
 
 <style scoped></style>

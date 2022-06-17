@@ -5,5 +5,5 @@ import './src/services' // 初始化 services
 ;(() => {
   console.log('content-script init')
 
-  allowWindowMessaging('BetaContentScript')
+  allowWindowMessaging('UhomecpContentScript')
 })()

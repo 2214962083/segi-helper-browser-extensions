@@ -1,9 +1,10 @@
-import {fetchMenuList} from '@/common/apis/uhomeBeta'
+import {fetchMenuList} from '@/common/apis/uhomecp'
+import {runInPageContext} from '@/common/utils/run-in-page-context'
 
 /**
  * 远程获取的菜单格式
  */
-export interface RemoteBetaMenu {
+export interface RemoteUhomecpMenu {
   orderNo: string
   openMode: string
   appPanelUrl: string
@@ -17,7 +18,7 @@ export interface RemoteBetaMenu {
   resName: string
   parentResId: string
   resCode: string
-  child?: RemoteBetaMenu[]
+  child?: RemoteUhomecpMenu[]
 
   /**
    * 内部补充 key
@@ -29,7 +30,7 @@ export interface RemoteBetaMenu {
 /**
  * find menu return 的菜单格式
  */
-export interface BetaMenu {
+export interface UhomecpMenu {
   /**
    * 菜单名称
    */
@@ -71,12 +72,12 @@ export interface FindMenusOptions {
   url: string
 
   /**
-   * 是否返回菜单的完整信息，默认 false
+   * 是否返回菜单的完整信息，默认 true
    */
   showMoreInfo?: boolean
 
   /**
-   * 查完是否自动打印结果， 默认为 false
+   * 查完是否自动打印结果， 默认为 true
    */
   autoLog?: boolean
 
@@ -86,7 +87,7 @@ export interface FindMenusOptions {
   autoGoLast?: boolean
 
   /**
-   * 是否自动聚焦最后一个结果的菜单，默认为 true
+   * 是否自动聚焦最后一个结果的菜单，默认为 false
    */
   autoFocusLast?: boolean
 }
@@ -97,16 +98,16 @@ export interface FindMenusOptions {
 export async function findMenus({
   name,
   url,
-  showMoreInfo = false,
+  showMoreInfo = true,
   autoLog = true,
   autoGoLast = false,
-  autoFocusLast = true
+  autoFocusLast = false
 }: FindMenusOptions) {
   interface PrivateFindMenusOptions {
     name: string
     url: string
     showMoreInfo?: boolean
-    _list?: RemoteBetaMenu[]
+    _list?: RemoteUhomecpMenu[]
     _prefixPathName?: string
   }
 
@@ -116,11 +117,11 @@ export async function findMenus({
   async function privateFindMenus({
     name,
     url,
-    showMoreInfo = false,
+    showMoreInfo = true,
     _list,
     _prefixPathName = ''
   }: PrivateFindMenusOptions) {
-    type PrivateMenu = BetaMenu & RemoteBetaMenu
+    type PrivateMenu = UhomecpMenu & RemoteUhomecpMenu
 
     // 获取远程菜单
     const menuList = _list ? _list : await fetchMenuList()
@@ -138,7 +139,7 @@ export async function findMenus({
         // 找到了菜单，处理一下数据
         const _menu = showMoreInfo ? (menu as PrivateMenu) : ({name: menuName, url: menuUrl} as PrivateMenu)
         _menu.pathName = _prefixPathName + menuName
-        _menu.go = () => top?.openPortalMenu?.(_menu.url, _menu.name)
+        _menu.go = () => openMenuPage(_menu.url, _menu.name)
         _menu.focus = () => focusMenu(_menu.pathName)
         findResult.push(_menu)
       }
@@ -169,6 +170,15 @@ export async function findMenus({
   return result
 }
 
+// 在新窗口打开菜单
+export async function openMenuPage(url: string, name: string) {
+  console.log('打开菜单页面:', url, name, top, top?.openPortalMenu)
+  return await runInPageContext({
+    func: (url, name) => top?.openPortalMenu?.(url, name),
+    args: [url, name]
+  })
+}
+
 // 根据路径名称聚焦菜单
 export function focusMenu(pathName: string) {
   const menuNames = pathName.split(' >> ')
@@ -177,7 +187,7 @@ export function focusMenu(pathName: string) {
   const addFocusStyle = (el: HTMLElement) =>
     el && Object.assign(el.style, {color: '#0084ff', border: '1px solid #0084ff'})
 
-  const [firstMenuName, secondMenuName, thirdMenuName] = menuNames
+  const [firstMenuName, secondMenuName, thirdMenuName, fourthMenuName] = menuNames
   if (menuNames.length === 0 || !firstMenuName) return
 
   // 一级菜单聚焦
@@ -194,11 +204,23 @@ export function focusMenu(pathName: string) {
 
   // 三级菜单聚焦
   // 因为这个渲染有延迟，所以在 setTimeout 里执行
-  setTimeout(() => {
-    const thirdMenuElm = Array.from(top?.document.querySelectorAll<HTMLElement>(`.third-name-knpy`) ?? []).find(el => {
-      return el.textContent === thirdMenuName
-    })
-    if (!thirdMenuElm) return
-    if (menuNames.length === 3) return addFocusStyle(thirdMenuElm)
-  }, 100)
+  if (menuNames.length === 3)
+    return setTimeout(() => {
+      const thirdMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`.third-name-knpy`) ?? []) // 三级菜单
+      const thirdMenuElm = thirdMenuElms.find(el => el.textContent === thirdMenuName)
+      if (!thirdMenuElm) return
+      console.log('找到三级菜单:', thirdMenuElm)
+      addFocusStyle(thirdMenuElm)
+    }, 100)
+
+  // 四级菜单聚焦
+  // 因为这个渲染有延迟，所以在 setTimeout 里执行
+  if (menuNames.length === 4)
+    return setTimeout(() => {
+      const fourthMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`.fourth-name-o71h span`) ?? []) // 四级菜单
+      const fourthMenuElm = fourthMenuElms.find(el => el.textContent === fourthMenuName)
+      if (!fourthMenuElm) return
+      console.log('找到四级菜单:', fourthMenuElm)
+      addFocusStyle(fourthMenuElm)
+    }, 100)
 }

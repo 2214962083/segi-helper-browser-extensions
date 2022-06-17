@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {onMessage} from 'webext-bridge'
 
@@ -14,10 +15,9 @@ export function OnMessage(id: string): MethodDecorator {
     }
 
     if (typeof method === 'function') {
-      console.log(`[OnMessage] ${id}`)
       onMessage(id, ({data}) => {
-        console.log(`[OnMessage] ${id}`, data, method)
-        return method(...data)
+        // @ts-ignore
+        return method.call(target, ...data)
       })
     }
   }

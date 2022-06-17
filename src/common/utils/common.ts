@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type {JsonValue} from 'type-fest'
 import Stoor from 'stoor'
 import {STORAGE_NAMESPACE} from './constants'
+import {DataTypeKey, Destination, GetDataType, GetReturnType, parseEndpoint, sendMessage} from 'webext-bridge'
+import browser from 'webextension-polyfill'
 
 /**
  * 字符串、数字或对象转成哈希字符串
@@ -51,4 +55,24 @@ export function useStorage(key: string | number | object, type: StorageType | nu
   }
 
   return [getValue, setValue, removeKey, clear] as const
+}
+
+/**
+ * 改写 sendMessage，默认发送给当前 tab
+ * @param messageID messageId
+ * @param data 数据
+ * @param destination 发送目的地信息
+ * @returns 响应结果
+ */
+export async function sendMessageToCurrentTab<ReturnType extends JsonValue, K extends DataTypeKey | string>(
+  messageID: K,
+  data: GetDataType<K, JsonValue>,
+  destination: Destination = 'background'
+): Promise<GetReturnType<K, ReturnType>> {
+  const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0]
+  const _dest = typeof destination === 'string' ? parseEndpoint(destination) : destination
+  // @ts-ignore
+  _dest.tabId = (tab.id ?? _dest.tabId) || null
+  console.log(_dest)
+  return sendMessage(messageID, data, _dest)
 }

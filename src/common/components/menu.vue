@@ -1,5 +1,5 @@
 <template>
-  <el-menu w-full mode="horizontal" v-bind="$attrs" class="my-menu">
+  <el-menu mode="horizontal" v-bind="$attrs" class="my-menu">
     <MenuItem v-for="menu in menus" :key="menu.key" :menu="menu"></MenuItem>
   </el-menu>
 </template>
