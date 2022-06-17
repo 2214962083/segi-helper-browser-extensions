@@ -1,4 +1,5 @@
 import {fetchMenuList} from '@/common/apis/uhomecp'
+import {sleep} from '@/common/utils/common'
 import {runInPageContext} from '@/common/utils/run-in-page-context'
 
 /**
@@ -180,8 +181,29 @@ export async function openMenuPage(url: string, name: string) {
 }
 
 // 根据路径名称聚焦菜单
-export function focusMenu(pathName: string) {
+export async function focusMenu(pathName: string) {
   const menuNames = pathName.split(' >> ')
+
+  // 左侧菜单滚动指定 elm
+  const scrollMenuElm = (menuElm: HTMLElement) => {
+    const menuListElm = top?.document.querySelector<HTMLElement>('.menus-ntk96q')
+    if (!menuListElm) return
+    menuListElm.scrollTo({
+      top: menuElm.offsetTop - menuListElm.offsetTop,
+      behavior: 'smooth'
+    })
+  }
+
+  // 关闭已展开的菜单
+  const closeMenu = async () => {
+    // 随便点击一个位置关闭菜单弹窗
+    top?.document.querySelector<HTMLElement>('.tabs-nwmp0v')?.click()
+
+    // 点击侧栏正在展开的菜单以收起菜单
+    const activeMenuElm = top?.document.querySelector<HTMLElement>('.first-wrap-mrg8.active-i80b > .ddd')
+    activeMenuElm?.click()
+    await sleep(activeMenuElm ? 500 : 100)
+  }
 
   // 添加焦点颜色
   const addFocusStyle = (el: HTMLElement) =>
@@ -190,37 +212,42 @@ export function focusMenu(pathName: string) {
   const [firstMenuName, secondMenuName, thirdMenuName, fourthMenuName] = menuNames
   if (menuNames.length === 0 || !firstMenuName) return
 
+  await closeMenu()
+
   // 一级菜单聚焦
   const firstMenuElm = top?.document.querySelector<HTMLElement>(`.first-mrg8 span[title="${firstMenuName}"]`)
   if (!firstMenuElm) return
+
+  // 滚动到指定位置
+  scrollMenuElm(firstMenuElm)
+  await sleep(100)
+
   if (menuNames.length === 1) return addFocusStyle(firstMenuElm)
   firstMenuElm.click()
+  await sleep(300)
 
   // 二级菜单聚焦
   const secondMenuElm = top?.document.querySelector<HTMLElement>(`.second-mrg8 span[title="${secondMenuName}"]`)
   if (!secondMenuElm) return
   if (menuNames.length === 2) return addFocusStyle(secondMenuElm)
   secondMenuElm.click()
+  await sleep(300)
 
   // 三级菜单聚焦
-  // 因为这个渲染有延迟，所以在 setTimeout 里执行
-  if (menuNames.length === 3)
-    return setTimeout(() => {
-      const thirdMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`.third-name-knpy`) ?? []) // 三级菜单
-      const thirdMenuElm = thirdMenuElms.find(el => el.textContent === thirdMenuName)
-      if (!thirdMenuElm) return
-      console.log('找到三级菜单:', thirdMenuElm)
-      addFocusStyle(thirdMenuElm)
-    }, 100)
+  if (menuNames.length === 3) {
+    const thirdMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 三级菜单
+    const thirdMenuElm = thirdMenuElms.find(el => el.textContent === thirdMenuName)
+    if (!thirdMenuElm) return
+    console.log('找到三级菜单:', thirdMenuElm)
+    addFocusStyle(thirdMenuElm)
+  }
 
   // 四级菜单聚焦
-  // 因为这个渲染有延迟，所以在 setTimeout 里执行
-  if (menuNames.length === 4)
-    return setTimeout(() => {
-      const fourthMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`.fourth-name-o71h span`) ?? []) // 四级菜单
-      const fourthMenuElm = fourthMenuElms.find(el => el.textContent === fourthMenuName)
-      if (!fourthMenuElm) return
-      console.log('找到四级菜单:', fourthMenuElm)
-      addFocusStyle(fourthMenuElm)
-    }, 100)
+  if (menuNames.length === 4) {
+    const fourthMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 四级菜单
+    const fourthMenuElm = fourthMenuElms.find(el => el.textContent === fourthMenuName)
+    if (!fourthMenuElm) return
+    console.log('找到四级菜单:', fourthMenuElm)
+    addFocusStyle(fourthMenuElm)
+  }
 }

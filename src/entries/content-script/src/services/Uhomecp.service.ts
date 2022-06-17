@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {WebextMessageId} from '@/common/utils/message-types'
 import {OnMessage} from '@/common/utils/decorators'
 import {findMenus, FindMenusOptions, openMenuPage, focusMenu} from '../utils/uhomecp-menu'
@@ -5,6 +6,7 @@ import {findMenus, FindMenusOptions, openMenuPage, focusMenu} from '../utils/uho
 export class UhomecpService {
   static _instance: UhomecpService
   static getInstance = () => UhomecpService._instance || (UhomecpService._instance = new UhomecpService())
+  private focusUhomecpMenuProcess: Promise<any> = Promise.resolve()
 
   /**
    * 搜索 uhomecp 菜单
@@ -26,8 +28,10 @@ export class UhomecpService {
    * 聚焦 uhomecp 菜单
    */
   @OnMessage(WebextMessageId.focusUhomecpMenu)
-  focusUhomecpMenu(options: {pathName: string}) {
-    return focusMenu(options.pathName)
+  async focusUhomecpMenu(options: {pathName: string}) {
+    await this.focusUhomecpMenuProcess
+    this.focusUhomecpMenuProcess = focusMenu(options.pathName)
+    return this.focusUhomecpMenuProcess
   }
 }
 

@@ -7,6 +7,14 @@ import {DataTypeKey, Destination, GetDataType, GetReturnType, parseEndpoint, sen
 import browser from 'webextension-polyfill'
 
 /**
+ * 睡眠函数
+ * @param ms 毫秒
+ */
+export function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+/**
  * 字符串、数字或对象转成哈希字符串
  * @param val 字符串、数字或对象
  * @returns 哈希字符串
