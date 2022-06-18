@@ -20,8 +20,8 @@
 
 <script setup lang="ts">
 import {ref} from 'vue'
-import MyMenu from '@/common/components/menu.vue'
-import {Menu} from '@/common/components/menu.type'
+import MyMenu from '@/common/components/Menu.vue'
+import {Menu} from '@/common/components/Menu.type'
 import SearchMenu from './views/tabs/SearchMenu.vue'
 import CollectMenu from './views/tabs/CollectMenu.vue'
 import Settings from './views/tabs/Settings.vue'

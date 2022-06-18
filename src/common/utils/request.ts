@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useStorage} from './common'
+import {hasOwnKey, useStorage} from './common'
 
 type HttpResultFormatType = 'json' | 'text'
 
@@ -25,6 +25,9 @@ export async function http<ResultType = any>(input: RequestInfo | URL, options?:
 
   const cacheType = cacheSessionStorage ? 'session' : cacheLocalStorage ? 'local' : null
 
+  // 错误信息，如果存在错误信息，则抛出
+  let errorMsg: null | string = null
+
   // 缓存
   const [getResult, saveResult] = useStorage(input, cacheType)
 
@@ -35,10 +38,38 @@ export async function http<ResultType = any>(input: RequestInfo | URL, options?:
   if (cacheResult) return cacheResult
 
   // 发送请求
-  const result = await fetch(input, fetchOptions)
+  const result = await fetch(input, fetchOptions).catch(err => {
+    // 捕获错误
+    if (hasOwnKey(Object(err), 'message')) {
+      errorMsg = err.message
+    } else if (hasOwnKey(Object(err), 'msg')) {
+      errorMsg = err.msg
+    } else {
+      errorMsg = String(err)
+    }
+  })
+
+  // 存在错误信息，抛出错误
+  if (errorMsg) throw new Error(errorMsg)
 
   // 解析结果
-  const formatResult: ResultType = formatType === 'json' ? await result.json() : await result.text()
+  const formatResult: ResultType = formatType === 'json' ? await result?.json() : await result?.text()
+
+  if (typeof formatResult === 'object' && hasOwnKey(formatResult as Record<string, any>, 'code')) {
+    const {code, message, msg} = formatResult as unknown as {code: string | number; message?: string; msg?: string}
+    if (String(code) !== '0') {
+      if (message) {
+        errorMsg = message
+      } else if (msg) {
+        errorMsg = msg
+      } else {
+        errorMsg = `请求错误，错误码 ${code}`
+      }
+    }
+  }
+
+  // 存在错误信息，抛出错误
+  if (errorMsg) throw new Error(errorMsg)
 
   // 写入缓存
   saveResult(formatResult)

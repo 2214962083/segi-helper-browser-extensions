@@ -1,6 +1,6 @@
 import {ElMenuItem, ElSubMenu} from 'element-plus'
 import {FunctionalComponent, PropType} from 'vue'
-import {Menu} from './menu.type'
+import {Menu} from './Menu.type'
 
 export const MenuItem: FunctionalComponent<{menu: Menu}> = props => {
   const menu = props.menu

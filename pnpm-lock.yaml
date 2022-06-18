@@ -6,6 +6,7 @@ specifiers:
   '@commitlint/cli': ^16.2.3
   '@commitlint/config-conventional': ^16.2.1
   '@element-plus/icons-vue': ^2.0.4
+  '@highlightjs/vue-plugin': ^2.1.0
   '@samrum/vite-plugin-web-extension': ^1.0.2
   '@types/crypto-js': ^4.1.1
   '@types/download': ^8.0.1
@@ -41,6 +42,7 @@ specifiers:
   esno: ^0.14.1
   express: ^4.18.1
   globby: 11.1.0
+  highlight.js: ^11.5.1
   husky: ^7.0.4
   lint-staged: ^12.3.8
   postcss: ^8.4.12
@@ -73,10 +75,12 @@ specifiers:
 
 dependencies:
   '@element-plus/icons-vue': 2.0.4_vue@3.2.37
+  '@highlightjs/vue-plugin': 2.1.0_highlight.js@11.5.1+vue@3.2.37
   '@vue/runtime-dom': 3.2.37
   '@vueuse/core': 8.6.0_vue@3.2.37
   crypto-js: 4.1.1
   element-plus: 2.2.5_vue@3.2.37
+  highlight.js: 11.5.1
   qrcode: 1.5.0
   stoor: 2.3.1
   type-fest: 2.13.1
@@ -832,6 +836,16 @@ packages:
     resolution: {integrity: sha512-vpjWB1uC7rajvgA58uzlJZgtWqrdDQLw+XVA3w63ZTmsWwRmVd0Gl5Dy9VMAViI9cP7hBWaJt23Jy3AVgVYnoQ==}
     dependencies:
       '@floating-ui/core': 0.7.3
+    dev: false
+
+  /@highlightjs/vue-plugin/2.1.0_highlight.js@11.5.1+vue@3.2.37:
+    resolution: {integrity: sha512-E+bmk4ncca+hBEYRV2a+1aIzIV0VSY/e5ArjpuSN9IO7wBJrzUE2u4ESCwrbQD7sAy+jWQjkV5qCCWgc+pu7CQ==}
+    peerDependencies:
+      highlight.js: ^11.0.1
+      vue: ^3
+    dependencies:
+      highlight.js: 11.5.1
+      vue: 3.2.37
     dev: false
 
   /@humanwhocodes/config-array/0.9.5:
@@ -6255,6 +6269,11 @@ packages:
   /hash-sum/2.0.0:
     resolution: {integrity: sha512-WdZTbAByD+pHfl/g9QSsBIIwy8IT+EsPiKDs0KNX+zSHhdDLFKdZu0BQHljvO+0QI/BasbMSUa8wYNCZTvhslg==}
     dev: true
+
+  /highlight.js/11.5.1:
+    resolution: {integrity: sha512-LKzHqnxr4CrD2YsNoIf/o5nJ09j4yi/GcH5BnYz9UnVpZdS4ucMgvP61TDty5xJcFGRjnH4DpujkS9bHT3hq0Q==}
+    engines: {node: '>=12.0.0'}
+    dev: false
 
   /homedir-polyfill/1.0.3:
     resolution: {integrity: sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA==}

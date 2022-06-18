@@ -12,8 +12,11 @@ export class UhomecpService {
    * 搜索 uhomecp 菜单
    */
   @OnMessage(WebextMessageId.searchUhomecpMenu)
-  searchUhomecpMenu(options: FindMenusOptions) {
-    return findMenus(options)
+  async searchUhomecpMenu(options: FindMenusOptions) {
+    const menus = await findMenus(options)
+
+    // 只显示前 50 条，太多容易卡 dom，懒得做虚拟列表，而且传输这些数据也会很卡
+    return menus.length > 50 ? menus.slice(0, 50) : menus
   }
 
   /**

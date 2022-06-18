@@ -13,37 +13,28 @@
 
     <!-- 列表 -->
     <div class="mt-2 pb-6 overflow-y-scroll flex-1 w-full">
-      <div
+      <UhomecpMenuCard
         v-for="(resultMenu, index) in searchResultMenus"
         :key="index"
-        class="w-full p-3 border-gray-200 flex items-center justify-between"
-        :class="{
-          'border-b': index !== searchResultMenus.length - 1
-        }"
-      >
-        <div>
-          {{ resultMenu.pathName }}
-        </div>
-        <div class="flex">
-          <el-button size="small" type="primary" @click="openUhomecpMenuPage(resultMenu)">打开</el-button>
-          <el-button class="ml-2" size="small" @click="focusUhomecpMenu(resultMenu)">聚焦</el-button>
-        </div>
-      </div>
+        :menu="resultMenu"
+        :show-border="index !== searchResultMenus.length - 1"
+      ></UhomecpMenuCard>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue'
 import {watchDebounced} from '@vueuse/core'
 import {UhomecpMenu, SelectOption} from '@/common/utils/type-helper'
+import UhomecpMenuCard from '@/common/components/UhomecpMenuCard.vue'
 import {Search} from '@element-plus/icons-vue'
 import {WebextMessageId} from '@/common/utils/message-types'
-import {sendMessageToCurrentTab} from '@/common/utils/common'
+import {sendMessageToCurrentTab, toastError} from '@/common/utils/common'
+import {useLocalRef} from '@/common/hooks/useLocalRef'
 
-const searchKeywords = ref('')
-const searchType = ref('url')
-const searchTypes = ref<SelectOption[]>([
+const searchKeywords = useLocalRef('SearchMenu_searchKeywords', '')
+const searchType = useLocalRef('SearchMenu_searchType', 'url')
+const searchTypes = useLocalRef<SelectOption[]>('SearchMenu_searchTypes', [
   {
     value: 'url',
     label: 'iframe url'
@@ -53,7 +44,7 @@ const searchTypes = ref<SelectOption[]>([
     label: '菜单名称'
   }
 ])
-const searchResultMenus = ref<UhomecpMenu[]>([])
+const searchResultMenus = useLocalRef<UhomecpMenu[]>('SearchMenu_searchResultMenus', [])
 
 async function search() {
   console.log('search')
@@ -67,35 +58,9 @@ async function search() {
       }
     ],
     'content-script'
-  )
+  ).catch(err => toastError(err) && [])
+
   return searchResultMenus.value
-}
-
-async function openUhomecpMenuPage(menu: UhomecpMenu) {
-  console.log('openUhomecpMenuPage', menu)
-  await sendMessageToCurrentTab(
-    WebextMessageId.openUhomecpMenuPage,
-    [
-      {
-        url: menu.url,
-        name: menu.name
-      }
-    ],
-    'content-script'
-  )
-}
-
-async function focusUhomecpMenu(menu: UhomecpMenu) {
-  console.log('focusUhomecpMenu', menu)
-  await sendMessageToCurrentTab(
-    WebextMessageId.focusUhomecpMenu,
-    [
-      {
-        pathName: menu.pathName
-      }
-    ],
-    'content-script'
-  )
 }
 
 watchDebounced(

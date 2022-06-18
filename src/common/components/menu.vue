@@ -6,8 +6,8 @@
 
 <script setup lang="ts">
 import {PropType} from 'vue'
-import {Menu} from './menu.type'
-import {MenuItem} from './menu-item'
+import {Menu} from './Menu.type'
+import {MenuItem} from './MenuItem'
 
 defineProps({
   menus: {

@@ -1,5 +1,5 @@
 import {fetchMenuList} from '@/common/apis/uhomecp'
-import {sleep} from '@/common/utils/common'
+import {sleep, valToHash} from '@/common/utils/common'
 import {runInPageContext} from '@/common/utils/run-in-page-context'
 
 /**
@@ -33,6 +33,11 @@ export interface RemoteUhomecpMenu {
  */
 export interface UhomecpMenu {
   /**
+   * 菜单 id
+   */
+  id: string
+
+  /**
    * 菜单名称
    */
   name: string
@@ -50,12 +55,12 @@ export interface UhomecpMenu {
   /**
    * 跳转菜单页面函数
    */
-  go: () => void
+  go?: () => void
 
   /**
    * 聚焦菜单函数
    */
-  focus: () => void
+  focus?: () => void
 }
 
 /**
@@ -138,8 +143,15 @@ export async function findMenus({
       if (url) cond = Boolean(menuUrl.match(url))
       if (cond) {
         // 找到了菜单，处理一下数据
-        const _menu = showMoreInfo ? (menu as PrivateMenu) : ({name: menuName, url: menuUrl} as PrivateMenu)
+        const _menu = showMoreInfo
+          ? (menu as PrivateMenu)
+          : ({
+              id: menu.resId,
+              name: menuName,
+              url: menuUrl
+            } as PrivateMenu)
         _menu.pathName = _prefixPathName + menuName
+        if (!_menu.id) _menu.id = valToHash(_menu.pathName) // 如果没有 id，则生成一个
         _menu.go = () => openMenuPage(_menu.url, _menu.name)
         _menu.focus = () => focusMenu(_menu.pathName)
         findResult.push(_menu)
@@ -165,8 +177,8 @@ export async function findMenus({
   if (autoLog) console.log('查找结果:', result)
   if (result.length) {
     const lastMenu = result[result.length - 1]
-    if (autoGoLast) lastMenu.go()
-    if (autoFocusLast) lastMenu.focus()
+    if (autoGoLast) lastMenu?.go?.()
+    if (autoFocusLast) lastMenu?.focus?.()
   }
   return result
 }
@@ -189,7 +201,7 @@ export async function focusMenu(pathName: string) {
     const menuListElm = top?.document.querySelector<HTMLElement>('.menus-ntk96q')
     if (!menuListElm) return
     menuListElm.scrollTo({
-      top: menuElm.offsetTop - menuListElm.offsetTop,
+      top: menuElm.offsetTop - 15, // - menuListElm.offsetTop,
       behavior: 'smooth'
     })
   }
@@ -235,19 +247,19 @@ export async function focusMenu(pathName: string) {
 
   // 三级菜单聚焦
   if (menuNames.length === 3) {
-    const thirdMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 三级菜单
-    const thirdMenuElm = thirdMenuElms.find(el => el.textContent === thirdMenuName)
-    if (!thirdMenuElm) return
-    console.log('找到三级菜单:', thirdMenuElm)
-    addFocusStyle(thirdMenuElm)
+    const maybeThirdMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 三级菜单
+    const thirdMenuElms = maybeThirdMenuElms.filter(el => el.textContent === thirdMenuName)
+    if (!thirdMenuElms.length) return
+    console.log('找到三级菜单:', thirdMenuElms)
+    thirdMenuElms.map(el => addFocusStyle(el))
   }
 
   // 四级菜单聚焦
   if (menuNames.length === 4) {
-    const fourthMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 四级菜单
-    const fourthMenuElm = fourthMenuElms.find(el => el.textContent === fourthMenuName)
-    if (!fourthMenuElm) return
-    console.log('找到四级菜单:', fourthMenuElm)
-    addFocusStyle(fourthMenuElm)
+    const maybeFourthMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 四级菜单
+    const fourthMenuElms = maybeFourthMenuElms.filter(el => el.textContent === fourthMenuName) // 可能存在多个，有些隐藏有些显示
+    if (!fourthMenuElms.length) return
+    console.log('找到四级菜单:', fourthMenuElms)
+    fourthMenuElms.map(el => addFocusStyle(el))
   }
 }

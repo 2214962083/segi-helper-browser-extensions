@@ -5,6 +5,43 @@ import Stoor from 'stoor'
 import {STORAGE_NAMESPACE} from './constants'
 import {DataTypeKey, Destination, GetDataType, GetReturnType, parseEndpoint, sendMessage} from 'webext-bridge'
 import browser from 'webextension-polyfill'
+import {ElNotification} from 'element-plus'
+import 'element-plus/theme-chalk/el-notification.css' // element-plus 的样式
+
+/**
+ * 删掉对象中空的 key
+ * @param obj 要过滤的对象
+ */
+export function deleteNilKeys<T extends Record<string, any>>(obj: T): T {
+  return Object.entries(obj).reduce((acc, [key, value]: [keyof T, any]) => {
+    if (Boolean(value) || value === 0) {
+      acc[key] = value
+    }
+    return acc
+  }, {} as T) as T
+}
+
+/**
+ * 提示错误信息
+ * @param errorMsg 错误信息
+ */
+export function toastError(error: string | Error) {
+  const errorMsg = typeof error === 'string' ? error : error.message || '未知错误'
+  console.error('toastError', errorMsg)
+  return ElNotification({
+    message: errorMsg,
+    type: 'error'
+  })
+}
+
+/**
+ * 对象是否存在这个 key
+ * @param obj 对象
+ * @param key 对象的 key
+ */
+export function hasOwnKey<T extends object, K extends keyof T>(obj: T, key: K): obj is T & Record<K, T[K]> {
+  return Object.prototype.hasOwnProperty.call(obj, key)
+}
 
 /**
  * 睡眠函数
