@@ -31,6 +31,7 @@
     "@vueuse/core": "^8.6.0",
     "crypto-js": "^4.1.1",
     "element-plus": "^2.2.5",
+    "eventemitter3": "^4.0.7",
     "highlight.js": "^11.5.1",
     "qrcode": "^1.5.0",
     "stoor": "^2.3.1",

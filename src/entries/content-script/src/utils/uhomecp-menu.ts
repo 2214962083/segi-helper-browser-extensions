@@ -143,13 +143,12 @@ export async function findMenus({
       if (url) cond = Boolean(menuUrl.match(url))
       if (cond) {
         // 找到了菜单，处理一下数据
-        const _menu = showMoreInfo
-          ? (menu as PrivateMenu)
-          : ({
-              id: menu.resId,
-              name: menuName,
-              url: menuUrl
-            } as PrivateMenu)
+        const _menu = {
+          ...(showMoreInfo ? (menu as PrivateMenu) : {}),
+          id: menu.resId,
+          name: menuName,
+          url: menuUrl
+        } as PrivateMenu
         _menu.pathName = _prefixPathName + menuName
         if (!_menu.id) _menu.id = valToHash(_menu.pathName) // 如果没有 id，则生成一个
         _menu.go = () => openMenuPage(_menu.url, _menu.name)
@@ -187,8 +186,8 @@ export async function findMenus({
 export async function openMenuPage(url: string, name: string) {
   console.log('打开菜单页面:', url, name, top, top?.openPortalMenu)
   return await runInPageContext({
-    func: (url, name) => top?.openPortalMenu?.(url, name),
-    args: [url, name]
+    args: [url, name],
+    func: `(url, name) => top?.openPortalMenu?.(url, name)`
   })
 }
 

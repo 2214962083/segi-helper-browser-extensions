@@ -4,7 +4,7 @@ export interface RunInPageContextOptions<Args extends any[], Result = any> {
    * 函数主体，这个会自动转换成字符串注入到页面上，
    * 不要引用本地的函数与变量，想用本地变量可以通过 args 传进去
    */
-  func: (...args: Args) => Result
+  func: ((...args: Args) => Result) | string
 
   /**
    * 函数参数，多参数格式为数组

@@ -29,7 +29,8 @@ import {SelectOption} from '@/common/utils/type-helper'
 import UhomecpMenuCard from '@/common/components/UhomecpMenuCard.vue'
 import {Search} from '@element-plus/icons-vue'
 import {useLocalRef} from '@/common/hooks/useLocalRef'
-import {CollectMenu, CollectMenuService} from '../../services/CollectMenu.service'
+import {computed, ref} from 'vue'
+import {useCollectMenuService} from '@/common/hooks/useCollectMenu'
 
 const searchKeywords = useLocalRef('CollectMenu_searchKeywords', '')
 const searchType = useLocalRef('CollectMenu_searchType', 'url')
@@ -43,27 +44,25 @@ const searchTypes = useLocalRef<SelectOption[]>('CollectMenu_searchTypes', [
     label: '菜单名称'
   }
 ])
-const searchResultMenus = useLocalRef<CollectMenu[]>('CollectMenu_searchResultMenus', [])
+const {collectMenus} = useCollectMenuService()
 
-/**
- * 加载收藏菜单
- */
-const co = CollectMenuService.getInstance()
-async function loadMenus() {
-  await co.init()
-  searchResultMenus.value = co.getAllMenus()
-}
-
-loadMenus()
-
-async function search() {
-  console.log('search')
-}
+//  防抖关键词
+const debounceKeywords = ref(searchKeywords.value)
+const searchResultMenus = computed(() => {
+  const keywords = debounceKeywords.value.trim()
+  return collectMenus.value.filter(menu => {
+    let cond = false
+    if (searchType.value === 'menuName' && keywords) cond = Boolean(menu.name?.match(keywords))
+    if (searchType.value === 'url' && keywords) cond = Boolean(menu.url?.match(keywords))
+    if (!keywords) cond = true
+    return cond
+  })
+})
 
 watchDebounced(
   [searchKeywords, searchType],
   () => {
-    search()
+    debounceKeywords.value = searchKeywords.value
   },
   {debounce: 500, maxWait: 1000}
 )

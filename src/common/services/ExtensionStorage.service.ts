@@ -22,11 +22,12 @@ export class ExtensionStorageService {
   constructor(options?: ExtensionStorageServiceOptions) {
     const {type = 'local'} = options || {}
     this.storage = type === 'local' ? browser.storage.local : browser.storage.sync
+    console.log('ExtensionStorageService', this)
   }
 
   async getItem<T = any>(key: string): Promise<T | null> {
     const result = await this.storage.get(key)
-    return JSON.parse(result[key]) ?? null
+    return result[key] ? JSON.parse(result[key]) : null
   }
 
   async setItem<T = any>(key: string, value: T): Promise<void> {

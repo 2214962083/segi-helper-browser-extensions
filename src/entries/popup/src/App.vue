@@ -1,5 +1,5 @@
 <template>
-  <div class="w-150 p-4 h-screen rounded relative overflow-hidden text-gray-700">
+  <div class="p-4 w-screen min-w-150 h-screen rounded relative overflow-hidden text-gray-700">
     <div class="absolute top-0 left-0 z-10 w-full">
       <!-- 顶部菜单 -->
       <MyMenu

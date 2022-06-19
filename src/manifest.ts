@@ -7,6 +7,7 @@ interface SharedManifest {
   options_ui: chrome.runtime.ManifestBase['options_ui']
   permissions: chrome.runtime.ManifestPermissions[]
   externally_connectable: chrome.runtime.ManifestBase['externally_connectable']
+  web_accessible_resources?: chrome.runtime.ManifestV3['web_accessible_resources'] // 可访问资源
 }
 
 const allowUrls = ['*://*/*']
@@ -95,7 +96,7 @@ export function getManifest(manifestVersion: number): chrome.runtime.ManifestV2 
     description: pkg.description, // 描述
     name: pkg.displayName ?? pkg.name, // 扩展名
     version: pkg.version // 版本
-  }
+  } as chrome.runtime.ManifestV2
 
   if (manifestVersion === 2) {
     // 兼容性好，不过 2023 的 chrome 就不支持了
@@ -113,7 +114,7 @@ export function getManifest(manifestVersion: number): chrome.runtime.ManifestV2 
       ...manifest,
       ...ManifestV3,
       manifest_version: manifestVersion
-    }
+    } as chrome.runtime.ManifestV3
   }
 
   throw new Error(`Missing manifest definition for manifestVersion ${manifestVersion}`)
