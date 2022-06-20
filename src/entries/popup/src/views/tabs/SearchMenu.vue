@@ -57,7 +57,7 @@ async function search() {
         name: searchType.value === 'menuName' ? searchKeywords.value : ''
       }
     ],
-    'content-script'
+    'window'
   ).catch(err => toastError(err) && [])
 
   return searchResultMenus.value

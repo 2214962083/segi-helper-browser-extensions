@@ -10,7 +10,7 @@
     "build": "vite build",
     "clean": "rimraf **/node_modules/**",
     "commit": "git add . &&git-cz",
-    "dev": "vite",
+    "dev": "pnpm start:chrome",
     "lint": "redrun lint:es lint:css",
     "lint:change": "lint-staged",
     "lint:css": "stylelint --aei --fix ./**/*.{vue,css,sass,scss,less,html} --cache --cache-location node_modules/.cache/stylelint/",
@@ -20,8 +20,8 @@
     "release": "esno ./scripts/release.ts",
     "serve:firefox": "web-ext run --start-url \"http://beta.uhomecp.com/web/portal/#/home\"  --source-dir ./dist/",
     "serve:chrome": "web-ext run -t chromium --start-url \"http://beta.uhomecp.com/web/portal/#/home\" --source-dir ./dist/",
-    "start:firefox": "concurrently \"npm:watch\" \"npm:serve:firefox\" ",
-    "start:chrome": "concurrently \"npm:watch\" \"npm:serve:chrome\" ",
+    "start:firefox": "concurrently -k -c \"npm:watch\" \"npm:serve:firefox\" ",
+    "start:chrome": "concurrently -k -c \"npm:watch\" \"npm:serve:chrome\" ",
     "watch": "vite build --watch"
   },
   "dependencies": {

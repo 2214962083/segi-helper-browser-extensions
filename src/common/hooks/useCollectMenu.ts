@@ -1,21 +1,23 @@
 import {CollectMenu, CollectMenuService} from '@/entries/popup/src/services/CollectMenu.service'
 import {computed, ref} from 'vue'
 
+// 收藏菜单服务
+const collectMenuService = CollectMenuService.getInstance()
+
+// 收藏菜单列表
+const collectMenus = ref<CollectMenu[]>([])
+
+// id 映射表
+const collectMenuIdMap = computed<Map<string, CollectMenu>>(() => {
+  const map = new Map<string, CollectMenu>()
+  collectMenus.value.forEach(menu => map.set(menu.id, menu))
+  return map
+})
+
 /**
  * 菜单收藏服务
  */
 export function useCollectMenuService() {
-  // 收藏菜单服务
-  const collectMenuService = CollectMenuService.getInstance()
-
-  // 收藏菜单列表
-  const collectMenus = ref<CollectMenu[]>([])
-  const collectMenuIdMap = computed<Map<string, CollectMenu>>(() => {
-    const map = new Map<string, CollectMenu>()
-    collectMenus.value.forEach(menu => map.set(menu.id, menu))
-    return map
-  })
-
   // 初始化
   collectMenuService.init()
 

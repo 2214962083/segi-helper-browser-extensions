@@ -5,10 +5,16 @@ import {EventEmitter} from 'eventemitter3'
 import {SetRequired} from 'type-fest'
 
 export interface CollectMenu extends UhomecpMenu {
+  /**
+   * 是否是自定义菜单
+   */
   isCustom?: boolean
 }
 
 export type CollectMenuServiceEvents = {
+  /**
+   * 收集菜单发生变化
+   */
   update: (menus: CollectMenu[]) => void
 }
 
@@ -62,7 +68,7 @@ export class CollectMenuService extends EventEmitter<CollectMenuServiceEvents> {
   async loadData() {
     this._data = (await this._extensionStorageService.getItem(CollectMenuService._storageKey)) ?? []
     console.log('loadData', this._data)
-    this._onUpdate()
+    return await this._onUpdate()
   }
 
   /**

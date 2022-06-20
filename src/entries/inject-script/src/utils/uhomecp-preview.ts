@@ -1,10 +1,16 @@
-/**
- * 本文件不走编译，将以字符串形式注入到页面中
- * 请勿引入任何其他文件
- */
+import {win} from './common'
 
-function previewMenu(el, url) {
-  const previewIframe = top.document.createElement('iframe')
+export interface PreviewMenuOptions {
+  el: HTMLElement
+  url: string
+  scale?: number
+  width?: number
+}
+export function previewMenu(options: PreviewMenuOptions) {
+  const {el, url, scale, width} = options
+
+  const previewIframe = win.document.createElement('iframe')
+
   Object.assign(previewIframe.style, {
     display: 'none',
     transformOrigin: '0% 0%',
@@ -15,17 +21,20 @@ function previewMenu(el, url) {
     position: 'fixed',
     zIndex: '9999999'
   })
+
   document.body.appendChild(previewIframe)
+
   el.addEventListener('mouseenter', e => {
-    const windowWidth = top.document.documentElement.clientWidth
-    const windowHeight = top.document.documentElement.clientHeight
-    const scale = 0.5
+    const windowWidth = win.document.documentElement.clientWidth
+    const windowHeight = win.document.documentElement.clientHeight
+    const finalWidth = width ? width : windowWidth * (scale || 0.5)
+    const finalHeight = (finalWidth / windowWidth) * windowHeight
     console.log('mouseenter', e)
     previewIframe.src = url
     Object.assign(previewIframe.style, {
       display: 'block',
-      width: windowWidth * scale + 'px',
-      height: windowHeight * scale + 'px',
+      width: finalWidth + 'px',
+      height: finalHeight + 'px',
       top: e.y + 'px',
       left: e.x + 'px'
     })
@@ -37,5 +46,3 @@ function previewMenu(el, url) {
     })
   })
 }
-window.previewMenu = previewMenu
-console.log('inject-uhomecp-preview.js', window)

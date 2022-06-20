@@ -50,7 +50,13 @@ const sharedManifest: SharedManifest = {
       ...allowUrls
     ],
     accepts_tls_channel_id: false
-  }
+  },
+  web_accessible_resources: [
+    {
+      resources: ['inject-script.js', 'assets/*'],
+      matches: [...allowUrls]
+    }
+  ]
 }
 
 // 扩展左上角气泡 ui
@@ -77,7 +83,8 @@ const ManifestV2 = {
     ...sharedManifest.options_ui,
     chrome_style: false // 不添加默认样式
   },
-  permissions: [...sharedManifest.permissions, ...allowUrls]
+  permissions: [...sharedManifest.permissions, ...allowUrls],
+  web_accessible_resources: sharedManifest.web_accessible_resources?.map(item => item.resources).flat()
 } as chrome.runtime.ManifestV2
 
 // 第三版扩展配置

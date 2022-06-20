@@ -20,6 +20,8 @@
         </template>
       </el-popover>
     </div>
+
+    <!-- 右边操作按钮区 -->
     <div class="flex flex-shrink-0">
       <el-button size="small" type="primary" @click="openUhomecpMenuPage(menu)">打开</el-button>
       <el-button class="ml-2" size="small" @click="focusUhomecpMenu(menu)">聚焦</el-button>
@@ -31,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import {UhomecpMenu} from '@/entries/content-script/src/utils/uhomecp-menu'
+import {UhomecpMenu} from '@/entries/inject-script/src/utils/uhomecp-menu'
 import {PropType} from 'vue'
 import {deleteNilKeys, sendMessageToCurrentTab} from '../utils/common'
 import {WebextMessageId} from '../utils/message-types'
@@ -63,7 +65,7 @@ async function openUhomecpMenuPage(menu: UhomecpMenu) {
         name: menu.name
       }
     ],
-    'content-script'
+    'window'
   )
 }
 
@@ -79,7 +81,7 @@ async function focusUhomecpMenu(menu: UhomecpMenu) {
         pathName: menu.pathName
       }
     ],
-    'content-script'
+    'window'
   )
 }
 

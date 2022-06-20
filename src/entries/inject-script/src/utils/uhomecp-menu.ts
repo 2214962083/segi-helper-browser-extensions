@@ -1,6 +1,6 @@
 import {fetchMenuList} from '@/common/apis/uhomecp'
 import {sleep, valToHash} from '@/common/utils/common'
-import {runInPageContext} from '@/common/utils/run-in-page-context'
+import {win} from './common'
 
 /**
  * 远程获取的菜单格式
@@ -51,16 +51,6 @@ export interface UhomecpMenu {
    * 菜单路径名称
    */
   pathName: string
-
-  /**
-   * 跳转菜单页面函数
-   */
-  go?: () => void
-
-  /**
-   * 聚焦菜单函数
-   */
-  focus?: () => void
 }
 
 /**
@@ -86,29 +76,12 @@ export interface FindMenusOptions {
    * 查完是否自动打印结果， 默认为 true
    */
   autoLog?: boolean
-
-  /**
-   * 是否自动打开最后一个结果的菜单页面，默认为 false
-   */
-  autoGoLast?: boolean
-
-  /**
-   * 是否自动聚焦最后一个结果的菜单，默认为 false
-   */
-  autoFocusLast?: boolean
 }
 
 /**
  * 根据菜单名称或 url 查找菜单，返回菜单数组
  */
-export async function findMenus({
-  name,
-  url,
-  showMoreInfo = true,
-  autoLog = true,
-  autoGoLast = false,
-  autoFocusLast = false
-}: FindMenusOptions) {
+export async function findMenus({name, url, showMoreInfo = true, autoLog = true}: FindMenusOptions) {
   interface PrivateFindMenusOptions {
     name: string
     url: string
@@ -151,8 +124,6 @@ export async function findMenus({
         } as PrivateMenu
         _menu.pathName = _prefixPathName + menuName
         if (!_menu.id) _menu.id = valToHash(_menu.pathName) // 如果没有 id，则生成一个
-        _menu.go = () => openMenuPage(_menu.url, _menu.name)
-        _menu.focus = () => focusMenu(_menu.pathName)
         findResult.push(_menu)
       }
 
@@ -174,21 +145,13 @@ export async function findMenus({
 
   const result = await privateFindMenus({name, url, showMoreInfo})
   if (autoLog) console.log('查找结果:', result)
-  if (result.length) {
-    const lastMenu = result[result.length - 1]
-    if (autoGoLast) lastMenu?.go?.()
-    if (autoFocusLast) lastMenu?.focus?.()
-  }
   return result
 }
 
 // 在新窗口打开菜单
 export async function openMenuPage(url: string, name: string) {
-  console.log('打开菜单页面:', url, name, top, top?.openPortalMenu)
-  return await runInPageContext({
-    args: [url, name],
-    func: `(url, name) => top?.openPortalMenu?.(url, name)`
-  })
+  console.log('打开菜单页面:', url, name, win, win.openPortalMenu)
+  return win.openPortalMenu?.(url, name)
 }
 
 // 根据路径名称聚焦菜单
@@ -197,7 +160,7 @@ export async function focusMenu(pathName: string) {
 
   // 左侧菜单滚动指定 elm
   const scrollMenuElm = (menuElm: HTMLElement) => {
-    const menuListElm = top?.document.querySelector<HTMLElement>('.menus-ntk96q')
+    const menuListElm = win.document.querySelector<HTMLElement>('.menus-ntk96q')
     if (!menuListElm) return
     menuListElm.scrollTo({
       top: menuElm.offsetTop - 15, // - menuListElm.offsetTop,
@@ -208,10 +171,10 @@ export async function focusMenu(pathName: string) {
   // 关闭已展开的菜单
   const closeMenu = async () => {
     // 随便点击一个位置关闭菜单弹窗
-    top?.document.querySelector<HTMLElement>('.tabs-nwmp0v')?.click()
+    win.document.querySelector<HTMLElement>('.tabs-nwmp0v')?.click()
 
     // 点击侧栏正在展开的菜单以收起菜单
-    const activeMenuElm = top?.document.querySelector<HTMLElement>('.first-wrap-mrg8.active-i80b > .ddd')
+    const activeMenuElm = win.document.querySelector<HTMLElement>('.first-wrap-mrg8.active-i80b > .ddd')
     activeMenuElm?.click()
     await sleep(activeMenuElm ? 500 : 100)
   }
@@ -226,7 +189,7 @@ export async function focusMenu(pathName: string) {
   await closeMenu()
 
   // 一级菜单聚焦
-  const firstMenuElm = top?.document.querySelector<HTMLElement>(`.first-mrg8 span[title="${firstMenuName}"]`)
+  const firstMenuElm = win.document.querySelector<HTMLElement>(`.first-mrg8 span[title="${firstMenuName}"]`)
   if (!firstMenuElm) return
 
   // 滚动到指定位置
@@ -238,7 +201,7 @@ export async function focusMenu(pathName: string) {
   await sleep(300)
 
   // 二级菜单聚焦
-  const secondMenuElm = top?.document.querySelector<HTMLElement>(`.second-mrg8 span[title="${secondMenuName}"]`)
+  const secondMenuElm = win.document.querySelector<HTMLElement>(`.second-mrg8 span[title="${secondMenuName}"]`)
   if (!secondMenuElm) return
   if (menuNames.length === 2) return addFocusStyle(secondMenuElm)
   secondMenuElm.click()
@@ -246,7 +209,7 @@ export async function focusMenu(pathName: string) {
 
   // 三级菜单聚焦
   if (menuNames.length === 3) {
-    const maybeThirdMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 三级菜单
+    const maybeThirdMenuElms = Array.from(win.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 三级菜单
     const thirdMenuElms = maybeThirdMenuElms.filter(el => el.textContent === thirdMenuName)
     if (!thirdMenuElms.length) return
     console.log('找到三级菜单:', thirdMenuElms)
@@ -255,7 +218,7 @@ export async function focusMenu(pathName: string) {
 
   // 四级菜单聚焦
   if (menuNames.length === 4) {
-    const maybeFourthMenuElms = Array.from(top?.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 四级菜单
+    const maybeFourthMenuElms = Array.from(win.document.querySelectorAll<HTMLElement>(`span.ddd`) ?? []) // 四级菜单
     const fourthMenuElms = maybeFourthMenuElms.filter(el => el.textContent === fourthMenuName) // 可能存在多个，有些隐藏有些显示
     if (!fourthMenuElms.length) return
     console.log('找到四级菜单:', fourthMenuElms)

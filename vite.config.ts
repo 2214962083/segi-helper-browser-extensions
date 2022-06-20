@@ -2,6 +2,7 @@
 import {defineConfig, loadEnv} from 'vite'
 import webExtension from '@samrum/vite-plugin-web-extension'
 import path from 'path'
+import {fileURLToPath} from 'url'
 import {getManifest} from './src/manifest'
 import Vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -10,6 +11,7 @@ import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 import Unocss from 'unocss/vite'
 import {presetAttributify, presetIcons, presetUno} from 'unocss'
 import {LogPlugin} from './scripts/vite-plugin-log'
+import {InjectScriptPlugin} from './scripts/vite-plugin-inject-script'
 
 const pathResolve = (..._path: string[]) => path.resolve(__dirname, ..._path)
 
@@ -32,6 +34,11 @@ export default defineConfig(({mode}) => {
       webExtension({
         manifest: getManifest(Number(MANIFEST_VERSION))
       }), // 浏览器扩展多入口打包
+      InjectScriptPlugin({
+        outputJsName: 'inject-script.js',
+        entryHtml: pathResolve('src/entries/inject-script/index.html'),
+        htmlMatchRegExp: /html-regexp-inject-script/
+      }),
       Unocss({
         presets: [presetUno(), presetAttributify(), presetIcons()],
         shortcuts: {
@@ -48,6 +55,24 @@ export default defineConfig(({mode}) => {
       terserOptions: {
         mangle: false
       }
+      // rollupOptions: {
+      //   input: {
+      //     'inject-script': pathResolve('src/entries/inject-script/index.ts')
+      //     // 'inject-script': fileURLToPath(new URL('./src/entries/inject-script/index.html', import.meta.url))
+      //   },
+      //   output: {
+      //     dir: pathResolve('dist'),
+      //     // chunkFileNames: `assets/[name].[hash].js`,
+      //     // assetFileNames: `assets/[name].[hash].[ext]`,
+      //     entryFileNames: chunk => {
+      //       const createName = (name?: string) => `assets/` + (name ? name : '[name].[hash].js')
+      //       if (chunk?.name?.startsWith('inject-script')) {
+      //         return createName(`inject-script.js`)
+      //       }
+      //       return createName()
+      //     }
+      //   }
+      // }
     },
     resolve: {
       alias: [

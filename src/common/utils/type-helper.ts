@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type {RemoteUhomecpMenu, UhomecpMenu, FindMenusOptions} from '@/entries/content-script/src/utils/uhomecp-menu'
+export type {RemoteUhomecpMenu, UhomecpMenu, FindMenusOptions} from '@/entries/inject-script/src/utils/uhomecp-menu'
 
 export interface SelectOption {
   label: string

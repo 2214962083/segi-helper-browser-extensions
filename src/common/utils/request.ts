@@ -10,6 +10,11 @@ interface HttpOptions extends RequestInit {
   formatType?: HttpResultFormatType
 
   /**
+   * 缓存时间，undefined 为无限长
+   */
+  cacheTime?: number | undefined
+
+  /**
    * 是否成功后缓存结果到 session storage，默认为 false
    */
   cacheSessionStorage?: boolean
@@ -21,7 +26,13 @@ interface HttpOptions extends RequestInit {
 }
 
 export async function http<ResultType = any>(input: RequestInfo | URL, options?: HttpOptions): Promise<ResultType> {
-  const {formatType = 'json', cacheLocalStorage = false, cacheSessionStorage = false, ...fetchOptions} = options || {}
+  const {
+    formatType = 'json',
+    cacheTime,
+    cacheLocalStorage = false,
+    cacheSessionStorage = false,
+    ...fetchOptions
+  } = options || {}
 
   const cacheType = cacheSessionStorage ? 'session' : cacheLocalStorage ? 'local' : null
 
@@ -72,7 +83,7 @@ export async function http<ResultType = any>(input: RequestInfo | URL, options?:
   if (errorMsg) throw new Error(errorMsg)
 
   // 写入缓存
-  saveResult(formatResult)
+  saveResult(formatResult, cacheTime)
 
   return formatResult
 }
