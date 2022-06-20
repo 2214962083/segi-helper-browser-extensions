@@ -11,6 +11,7 @@ specifiers:
   '@types/crypto-js': ^4.1.1
   '@types/download': ^8.0.1
   '@types/eslint': ^8.4.1
+  '@types/lodash-es': ^4.17.6
   '@types/prettier': ^2.6.0
   '@typescript-eslint/eslint-plugin': ^5.19.0
   '@typescript-eslint/parser': ^5.19.0
@@ -46,6 +47,7 @@ specifiers:
   highlight.js: ^11.5.1
   husky: ^7.0.4
   lint-staged: ^12.3.8
+  lodash-es: ^4.17.21
   postcss: ^8.4.12
   postcss-html: ^1.4.1
   postcss-less: ^6.0.0
@@ -83,6 +85,7 @@ dependencies:
   element-plus: 2.2.5_vue@3.2.37
   eventemitter3: 4.0.7
   highlight.js: 11.5.1
+  lodash-es: 4.17.21
   qrcode: 1.5.0
   stoor: 2.3.1
   type-fest: 2.13.1
@@ -97,6 +100,7 @@ devDependencies:
   '@types/crypto-js': 4.1.1
   '@types/download': 8.0.1
   '@types/eslint': 8.4.3
+  '@types/lodash-es': 4.17.6
   '@types/prettier': 2.6.3
   '@typescript-eslint/eslint-plugin': 5.28.0_2551fc53f6a34f9b075c72e25ae70d6e
   '@typescript-eslint/parser': 5.28.0_eslint@8.17.0+typescript@4.6.3
@@ -2438,11 +2442,9 @@ packages:
     resolution: {integrity: sha512-R+zTeVUKDdfoRxpAryaQNRKk3105Rrgx2CFRClIgRGaqDTdjsm8h6IYA8ir584W3ePzkZfst5xIgDwYrlh9HLg==}
     dependencies:
       '@types/lodash': 4.14.182
-    dev: false
 
   /@types/lodash/4.14.182:
     resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
-    dev: false
 
   /@types/mdast/3.0.10:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}
