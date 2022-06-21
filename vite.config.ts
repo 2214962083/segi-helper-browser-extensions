@@ -2,7 +2,8 @@
 import {defineConfig, loadEnv} from 'vite'
 import webExtension from '@samrum/vite-plugin-web-extension'
 import path from 'path'
-import {fileURLToPath} from 'url'
+// import {fileURLToPath} from 'url'
+import svgLoader from 'vite-svg-loader'
 import {getManifest} from './src/manifest'
 import Vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
@@ -14,7 +15,7 @@ import {LogPlugin} from './scripts/vite-plugin-log'
 import {InjectScriptPlugin} from './scripts/vite-plugin-inject-script'
 
 const pathResolve = (..._path: string[]) => path.resolve(__dirname, ..._path)
-
+const isProd = process.env.BUILD_MODE === 'BUILD'
 const MANIFEST_VERSION = 2
 
 // https://vitejs.dev/config/
@@ -39,6 +40,9 @@ export default defineConfig(({mode}) => {
         entryHtml: pathResolve('src/entries/inject-script/index.html'),
         htmlMatchRegExp: /html-regexp-inject-script/
       }),
+      svgLoader({
+        defaultImport: 'component'
+      }), // 默认引入 svg 为 component
       Unocss({
         presets: [presetUno(), presetAttributify(), presetIcons()],
         shortcuts: {
@@ -59,10 +63,9 @@ export default defineConfig(({mode}) => {
     build: {
       target: 'es2015',
       polyfillDynamicImport: false,
+      sourcemap: isProd ? false : 'inline',
       // https://developer.chrome.com/docs/webstore/program_policies/#:~:text=Code%20Readability%20Requirements
-      terserOptions: {
-        mangle: false
-      }
+      minify: isProd
       // rollupOptions: {
       //   input: {
       //     'inject-script': pathResolve('src/entries/inject-script/index.ts')

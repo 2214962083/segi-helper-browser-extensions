@@ -2,6 +2,7 @@
 
 import {fetchFileTree, RemoteGitlabFileTreeItem} from '@/common/apis/gitlab'
 import {win} from '../utils/common'
+import {getFileIconByFileName, getFolderIconByFolderName} from '../utils/file-icon-utils'
 
 export interface GitlabFileTreeItem extends RemoteGitlabFileTreeItem {
   /**
@@ -18,6 +19,11 @@ export interface GitlabFileTreeItem extends RemoteGitlabFileTreeItem {
    * 是否是文件
    */
   isFile: boolean
+
+  /**
+   * icon 名称
+   */
+  iconName: string
 
   /**
    * 子节点
@@ -45,6 +51,11 @@ export class GitlabService {
   private _repoBranch!: string
 
   /**
+   * 当前是否是仓库页
+   */
+  private _isRepoPage = false
+
+  /**
    * 当前仓库标题
    */
   get repoTitle() {
@@ -66,6 +77,13 @@ export class GitlabService {
   }
 
   /**
+   * 当前是否是仓库页
+   */
+  get isRepoPage() {
+    return this._isRepoPage
+  }
+
+  /**
    * 初始化
    */
   init() {
@@ -76,9 +94,17 @@ export class GitlabService {
    * 更新当前仓库信息
    */
   updateRepoInfo() {
+    this.updateIsRepoPage()
     this.updateRepoTitle()
     this.updateRepoBaseUrl()
     this.updateRepoBranch()
+  }
+
+  /**
+   * 更新当前是否是仓库页
+   */
+  updateIsRepoPage() {
+    this._isRepoPage = Boolean(win.document.querySelector<HTMLElement>('.qa-branches-select'))
   }
 
   /**
@@ -104,6 +130,20 @@ export class GitlabService {
    */
   updateRepoBranch() {
     this._repoBranch = win.document.querySelector<HTMLElement>('.qa-branches-select')?.dataset?.selected ?? 'master'
+  }
+
+  /**
+   * 遍历文件树
+   * @param fileTree 文件树
+   * @param callback 回调函数
+   */
+  traverseFileTree(fileTree: GitlabFileTreeItem[], callback: (item: GitlabFileTreeItem) => void) {
+    fileTree.forEach(item => {
+      callback(item)
+      if (item.children) {
+        this.traverseFileTree(item.children, callback)
+      }
+    })
   }
 
   /**
@@ -152,10 +192,14 @@ export class GitlabService {
    */
   buildFileTreeItem(remoteTreeItem: RemoteGitlabFileTreeItem): GitlabFileTreeItem {
     const isFile = remoteTreeItem.type === 'blob'
+    const iconName = isFile
+      ? getFileIconByFileName(remoteTreeItem.name)
+      : getFolderIconByFolderName(remoteTreeItem.name)
     const treeItem: GitlabFileTreeItem = {
       ...remoteTreeItem,
       label: remoteTreeItem.name,
       isFile,
+      iconName,
       fullUrl: this.getRepoFileOrFolderUrl(remoteTreeItem.path, isFile)
     }
 

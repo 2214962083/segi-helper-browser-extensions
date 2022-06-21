@@ -67,5 +67,9 @@ export const fetchFileTree = (options: FetchFileTreeOptions): Promise<FetchFileT
     repoName
   )}/repository/tree?ref=${branchName}&recursive=${recursive}&per_page=${per_page}&path=${path}`
 
-  return http(url, {cacheSessionStorage: true, formatType: 'json'})
+  return http(url, {
+    cacheSessionStorage: true,
+    formatType: 'json',
+    resolveCondition: data => Array.isArray(data)
+  })
 }

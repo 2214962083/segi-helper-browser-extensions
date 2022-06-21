@@ -7,7 +7,7 @@
   "author": "yangjinming",
   "scripts": {
     "bootstrap": "pnpm i",
-    "build": "vite build",
+    "build": "cross-env BUILD_MODE=BUILD vite build",
     "clean": "rimraf **/node_modules/**",
     "commit": "git add . &&git-cz",
     "dev": "pnpm start:chrome",
@@ -22,7 +22,7 @@
     "serve:chrome": "web-ext run -t chromium --start-url \"http://beta.uhomecp.com/web/portal/#/home\" --source-dir ./dist/",
     "start:firefox": "concurrently -k -c \"npm:watch\" \"npm:serve:firefox\" ",
     "start:chrome": "concurrently -k -c \"npm:watch\" \"npm:serve:chrome\" ",
-    "watch": "vite build --watch"
+    "watch": "cross-env BUILD_MODE=WATCH vite build --watch"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.4",
@@ -98,6 +98,7 @@
     "unocss": "^0.39.0",
     "unplugin-vue-components": "^0.19.6",
     "vite": "~2.9.12",
+    "vite-svg-loader": "^3.4.0",
     "web-ext": "^7.0.0"
   },
   "engines": {

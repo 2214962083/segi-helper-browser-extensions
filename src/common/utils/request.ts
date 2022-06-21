@@ -23,6 +23,12 @@ interface HttpOptions extends RequestInit {
    * 是否成功后缓存结果到 local storage，默认为 false
    */
   cacheLocalStorage?: boolean
+
+  /**
+   * 成功命中条件，默认为命中
+   * 返回字符串则为错误信息
+   */
+  resolveCondition?: (res: any) => boolean | string
 }
 
 export async function http<ResultType = any>(input: RequestInfo | URL, options?: HttpOptions): Promise<ResultType> {
@@ -31,6 +37,7 @@ export async function http<ResultType = any>(input: RequestInfo | URL, options?:
     cacheTime,
     cacheLocalStorage = false,
     cacheSessionStorage = false,
+    resolveCondition,
     ...fetchOptions
   } = options || {}
 
@@ -77,6 +84,14 @@ export async function http<ResultType = any>(input: RequestInfo | URL, options?:
         errorMsg = `请求错误，错误码 ${code}`
       }
     }
+  }
+
+  // 判断是否命中成功条件
+  const resolveConditionResult = resolveCondition ? resolveCondition(formatResult) : true
+  if (resolveConditionResult !== true) {
+    errorMsg = resolveConditionResult
+      ? resolveConditionResult
+      : (formatResult as any).message || (formatResult as any).msg || '没命中成功条件'
   }
 
   // 存在错误信息，抛出错误
