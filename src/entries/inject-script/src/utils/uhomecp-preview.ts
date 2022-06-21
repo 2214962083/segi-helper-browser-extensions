@@ -87,7 +87,15 @@ export function usePreviewLink(options?: UsePreviewLinkOptions) {
 
 // 菜单 res id 和菜单信息的映射表
 let menuResIdMap: Map<string, RemoteUhomecpMenu>
-export function usePreviewMenu() {
+
+/**
+ * 预览菜单功能
+ * @param urlRegExps 正则表达式数组，只有 url 符合正则表达式才会触发预览
+ */
+export function usePreviewMenu(urlRegExps: (RegExp | string)[] = []) {
+  const currentUrl = win.location.href
+  if (urlRegExps.every(urlRegExp => !currentUrl.match(urlRegExp))) return
+
   /**
    * 获取 res id 对应的菜单映射表
    */

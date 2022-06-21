@@ -44,7 +44,15 @@ export default defineConfig(({mode}) => {
         shortcuts: {
           'bg-hover': 'hover:bg-gray:15',
           'icon-hover': 'op50 hover:op100'
-        }
+        },
+        rules: [
+          [
+            /^shadow-normal$/,
+            () => ({
+              'box-shadow': '2px 4px 8px rgba(0, 0, 0, 0.2)'
+            })
+          ]
+        ]
       }), // 类似 tailwind，按需生成css
       LogPlugin() // 打印浏览器扩展多页面地址
     ],

@@ -121,3 +121,23 @@ export async function sendMessageToCurrentTab<ReturnType extends JsonValue, K ex
   console.log(_dest)
   return sendMessage(messageID, data, _dest)
 }
+
+/**
+ * 获取 app 渲染节点
+ * @param className 类名
+ */
+export function useAppContainer(className?: string) {
+  const win = top || window
+  const appContainer = win.document.createElement('div')
+  if (className) appContainer.className = className
+  win.document.body.appendChild(appContainer)
+
+  const remove = () => {
+    win.document.body.removeChild(appContainer)
+  }
+
+  return {
+    appContainer,
+    removeAppContainer: remove
+  }
+}
