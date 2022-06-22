@@ -114,10 +114,10 @@ export async function sendMessageToCurrentTab<ReturnType extends JsonValue, K ex
   data: GetDataType<K, JsonValue>,
   destination: Destination = 'background'
 ): Promise<GetReturnType<K, ReturnType>> {
-  const tab = (await browser.tabs.query({active: true, currentWindow: true}))[0]
+  const tab = (await browser?.tabs?.query?.({active: true, currentWindow: true}))?.[0]
   const _dest = typeof destination === 'string' ? parseEndpoint(destination) : destination
   // @ts-ignore
-  _dest.tabId = (tab.id ?? _dest.tabId) || null
+  _dest.tabId = (tab?.id ?? _dest.tabId) || null
   console.log(_dest)
   return sendMessage(messageID, data, _dest)
 }
@@ -140,4 +140,13 @@ export function useAppContainer(className?: string) {
     appContainer,
     removeAppContainer: remove
   }
+}
+
+/**
+ * 获取文本比特大小
+ * @param text 文本
+ * @returns 比特率，1024代表 1kb，1024*1024 代表 1mb
+ */
+export function getTextBytes(text: string) {
+  return new TextEncoder().encode(text).length
 }

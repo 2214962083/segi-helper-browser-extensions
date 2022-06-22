@@ -98,7 +98,7 @@ export interface FetchFileRawOptions {
  */
 export const fetchFileRaw = async (options: FetchFileRawOptions) => {
   const {repoName, branchName = 'master', path} = options
-  const url = `${gitlabBaseUrl}/${encodeURIComponent(repoName)}/raw/${branchName}/${path}`
+  const url = `${gitlabBaseUrl}/${repoName}/raw/${branchName}/${path}`
   const res = await fetch(url)
   const contentType = res.headers.get('content-type')
   if (contentType?.match('text')) {

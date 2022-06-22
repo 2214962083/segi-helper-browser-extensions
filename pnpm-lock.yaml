@@ -72,6 +72,7 @@ specifiers:
   unocss: ^0.39.0
   unplugin-vue-components: ^0.19.6
   vite: ~2.9.12
+  vite-plugin-static-copy: ^0.5.1
   vite-svg-loader: ^3.4.0
   vue: ^3.2.37
   web-ext: ^7.0.0
@@ -153,6 +154,7 @@ devDependencies:
   unocss: 0.39.0_vite@2.9.12
   unplugin-vue-components: 0.19.6_vite@2.9.12+vue@3.2.37
   vite: 2.9.12
+  vite-plugin-static-copy: 0.5.1_vite@2.9.12
   vite-svg-loader: 3.4.0
   web-ext: 7.0.0_9a1ee802c5314659cab46ff8ba0f7bfc
 
@@ -8000,7 +8002,7 @@ packages:
     optional: true
 
   /nano-memoize/1.3.0:
-    resolution: {integrity: sha512-yM/gMQHvA5EOtNGfEbJ8tmAveNjbckhzZ1hkNtMjY8zps3ocjPfp1kuJ1++OgtVHAhsGSTJttG3S6UV+FZZzxQ==, tarball: nano-memoize/-/nano-memoize-1.3.0.tgz}
+    resolution: {integrity: sha512-yM/gMQHvA5EOtNGfEbJ8tmAveNjbckhzZ1hkNtMjY8zps3ocjPfp1kuJ1++OgtVHAhsGSTJttG3S6UV+FZZzxQ==}
     dev: true
 
   /nanoevents/6.0.2:
@@ -11213,6 +11215,19 @@ packages:
       is-buffer: 2.0.5
       unist-util-stringify-position: 3.0.2
       vfile-message: 3.1.2
+    dev: true
+
+  /vite-plugin-static-copy/0.5.1_vite@2.9.12:
+    resolution: {integrity: sha512-jRB+TzYUc93lSCRb0xKCJNAjaYb1LwHoLVPsz7cqFN2kDybwLsDpayUzPiNSn1Nb8lX5aoZ5Az/gV9zQu3t8dg==}
+    engines: {node: '>=12.2'}
+    peerDependencies:
+      vite: ^2.6.14
+    dependencies:
+      chokidar: 3.5.3
+      fast-glob: 3.2.11
+      fs-extra: 10.1.0
+      picocolors: 1.0.0
+      vite: 2.9.12
     dev: true
 
   /vite-svg-loader/3.4.0:

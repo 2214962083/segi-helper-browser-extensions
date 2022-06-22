@@ -40,7 +40,7 @@
             <template #reference>
               <div
                 class="flex items-center h-full cursor-pointer"
-                :class="[data.id === currentFileNode?.id ? 'bg-yellow-200/80' : '']"
+                :class="[data.id === currentFileNode?.id ? 'bg-yellow-200/50 text-yellow-800' : '']"
               >
                 <DynamicIcon :name="data.iconName" :is-open="node.expanded" class="text-sm mr-2" />
                 <span style="line-height: 1rem">
@@ -62,18 +62,25 @@
     >
       代码目录
     </div>
+
+    <GitlabFileViewer
+      :repo-name="gitlabService.repoTitle"
+      :branch-name="gitlabService.repoBranch"
+      :path="currentFileNode?.path"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {nextTick, onMounted, reactive, ref, watch} from 'vue'
-import {useElementHover, useEventListener} from '@vueuse/core'
+import {useElementHover, useEventListener, onClickOutside} from '@vueuse/core'
 import {GitlabFileTreeItem, GitlabService} from '../services/Gitlab.service'
 import {win} from '../utils/common'
 import {useStorage} from '@/common/utils/common'
 import DynamicIcon from './DynamicIcon'
 import {getTextSize} from '@/common/utils/style'
+import GitlabFileViewer from './GitlabFileViewer.vue'
 
 // 抽屉开关按钮
 const drawerSwitchDom = ref()
@@ -96,9 +103,11 @@ const drawerBodyClassName = 'segi-gitlab-tree-drawer-body'
 const repoTitle = ref('')
 
 onMounted(() => {
-  // 监听鼠标移出抽屉时，关闭抽屉
-  const drawerBodyDom = document.querySelector(`.${drawerBodyClassName}`)
+  // 抽屉内容 dom
+  const drawerBodyDom = document.querySelector<HTMLElement>(`.${drawerBodyClassName}`)
   if (!drawerBodyDom) return
+
+  // 监听鼠标移出抽屉时，关闭抽屉
   useEventListener(
     drawerBodyDom,
     'mouseleave',
@@ -109,6 +118,13 @@ onMounted(() => {
     },
     false
   )
+
+  // 鼠标点击抽屉内容区域外时，关闭抽屉
+  onClickOutside(drawerBodyDom, () => {
+    if (drawerVisible.value) {
+      drawerVisible.value = false
+    }
+  })
 })
 
 // 当 hover 中抽屉开关时，打开抽屉
@@ -156,7 +172,6 @@ const gitlabFileTreeTempState = reactive({
   fileTree, // 文件树
   drawerVisible, // 抽屉是否显示
   isDrawerOpened, // 抽屉是否已打开
-  isDrawerSwitchDomHovered, // 抽屉开关是否 hover
   drawerContentScrollTop: 0 // 抽屉内容区域滚动条位置
 })
 

@@ -7,6 +7,7 @@ import svgLoader from 'vite-svg-loader'
 import {getManifest} from './src/manifest'
 import Vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import {viteStaticCopy} from 'vite-plugin-static-copy'
 import Components from 'unplugin-vue-components/vite'
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
 import Unocss from 'unocss/vite'
@@ -43,6 +44,20 @@ export default defineConfig(({mode}) => {
       svgLoader({
         defaultImport: 'component'
       }), // 默认引入 svg 为 component
+      viteStaticCopy({
+        targets: [
+          {
+            // 复制 tmLanguage.json 和 theme.json 到 dist/assets/shiki/ 下，以提供 shiki fetch
+            src: ['node_modules/shiki/languages/', 'node_modules/shiki/themes/'],
+            dest: 'assets/shiki/'
+          },
+          {
+            // 复制 onig.wasm 到 dist/assets/shiki/dist/ 下，以提供 shiki fetch
+            src: ['node_modules/shiki/dist/onig.wasm'],
+            dest: 'assets/shiki/dist/'
+          }
+        ]
+      }),
       Unocss({
         presets: [presetUno(), presetAttributify(), presetIcons()],
         shortcuts: {
@@ -64,6 +79,7 @@ export default defineConfig(({mode}) => {
       target: 'es2015',
       polyfillDynamicImport: false,
       sourcemap: isProd ? false : 'inline',
+      chunkSizeWarningLimit: Infinity, // 打包再大又如何，老夫忽略它
       // https://developer.chrome.com/docs/webstore/program_policies/#:~:text=Code%20Readability%20Requirements
       minify: isProd
       // rollupOptions: {
