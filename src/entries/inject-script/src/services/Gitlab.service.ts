@@ -136,12 +136,17 @@ export class GitlabService {
    * 遍历文件树
    * @param fileTree 文件树
    * @param callback 回调函数
+   * @param depth 当前深度（不用传，这是内部计算，在callback会回调）
    */
-  traverseFileTree(fileTree: GitlabFileTreeItem[], callback: (item: GitlabFileTreeItem) => void) {
+  traverseFileTree(
+    fileTree: GitlabFileTreeItem[],
+    callback: (item: GitlabFileTreeItem, depth: number) => void,
+    depth = 0
+  ) {
     fileTree.forEach(item => {
-      callback(item)
+      callback(item, depth)
       if (item.children) {
-        this.traverseFileTree(item.children, callback)
+        this.traverseFileTree(item.children, callback, depth + 1)
       }
     })
   }

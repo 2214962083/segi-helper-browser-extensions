@@ -58,7 +58,9 @@ export interface RemoteGitlabFileTreeItem {
 
 export type FetchFileTreeRes = RemoteGitlabFileTreeItem[]
 
-// 获取 gitlab 文件树
+/**
+ * 获取 gitlab 文件树
+ */
 export const fetchFileTree = (options: FetchFileTreeOptions): Promise<FetchFileTreeRes> => {
   const {repoName, branchName = 'master', recursive = false, per_page = 100, path} = options
 
@@ -72,4 +74,36 @@ export const fetchFileTree = (options: FetchFileTreeOptions): Promise<FetchFileT
     formatType: 'json',
     resolveCondition: data => Array.isArray(data)
   })
+}
+
+export interface FetchFileRawOptions {
+  /**
+   * 仓库名称，比如 xxx/share-docs
+   */
+  repoName: string
+
+  /**
+   * 仓库分支，比如 master
+   */
+  branchName: string
+
+  /**
+   * 文件路径
+   */
+  path: string
+}
+
+/**
+ * 获取 gitlab 代码原始内容
+ */
+export const fetchFileRaw = async (options: FetchFileRawOptions) => {
+  const {repoName, branchName = 'master', path} = options
+  const url = `${gitlabBaseUrl}/${encodeURIComponent(repoName)}/raw/${branchName}/${path}`
+  const res = await fetch(url)
+  const contentType = res.headers.get('content-type')
+  if (contentType?.match('text')) {
+    return await res.text()
+  } else {
+    return await res.blob()
+  }
 }

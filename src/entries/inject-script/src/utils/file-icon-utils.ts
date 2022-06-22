@@ -19,7 +19,7 @@ export const getIconComponentByIconName = (iconName: string): Component | undefi
  * 输入 /src/aaa/bbb/cc.route.js 输出 route.js
  * @param filePath 文件路径
  */
-const getFileExtNameFromFilePath = (filePath: string): string => {
+export const getFileExtNameFromFilePath = (filePath: string): string => {
   return filePath?.split('/')?.pop()?.split('.')?.slice(1)?.join('.') ?? ''
 }
 
