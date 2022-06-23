@@ -1,5 +1,10 @@
 <template>
-  <div class="segi-gitlab-tree">
+  <div
+    class="segi-gitlab-tree"
+    :style="{
+      '--drawer-width': fileTreeContainerMaxWidth + 'px'
+    }"
+  >
     <!-- 左侧抽屉 -->
     <el-drawer
       v-model="drawerVisible"
@@ -7,21 +12,42 @@
       :size="fileTreeContainerMaxWidth"
       :show-close="false"
       :modal="false"
-      :custom-class="drawerBodyClassName"
+      modal-class="segi-gitlab-tree-drawer-modal-isDin"
+      :custom-class="{[drawerBodyClassName]: true, 'segi-gitlab-tree-drawer-body-isDin': isDin}"
       @opened="handleOpened"
       @close="handleClose"
     >
       <template #header>
-        <!-- 抽屉标题 -->
-        {{ repoTitle }}
+        <div class="w-full">
+          <div class="w-full flex justify-between items-center">
+            <div>
+              <!-- 抽屉标题 -->
+              {{ repoTitle }}
+            </div>
+            <div class="flex flex-shrink-0">
+              <el-icon :size="18" alt="进入或退出全屏" class="cursor-pointer !mr-2" @click="handleFullscreenClick">
+                <FullScreen></FullScreen>
+              </el-icon>
+              <el-icon :size="18" alt="是否固定" class="cursor-pointer" @click="handleDinClick">
+                <Unlock v-if="!isDin"></Unlock>
+                <Lock v-else></Lock>
+              </el-icon>
+            </div>
+          </div>
+          <!-- 搜索框 -->
+          <el-input v-model="fileNameKeywords" placeholder="搜索文件" class="mt-4" />
+        </div>
       </template>
 
       <!-- 文件树 -->
       <el-tree
+        ref="fileTreeRef"
+        v-loading="fileTreeLoading"
         :data="fileTree"
         node-key="id"
         accordion
         :default-expanded-keys="defaultExpandedKeys"
+        :filter-node-method="filterFileNode"
         @node-click="handleFileNodeClick"
       >
         <!-- 自定义每个节点的渲染 -->
@@ -64,9 +90,12 @@
     </div>
 
     <GitlabFileViewer
+      ref="fileViewerRef"
       :repo-name="gitlabService.repoTitle"
       :branch-name="gitlabService.repoBranch"
       :path="currentFileNode?.path"
+      :is-din="isDin"
+      :drawer-width="fileTreeContainerMaxWidth"
     />
   </div>
 </template>
@@ -74,13 +103,26 @@
 <script setup lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {nextTick, onMounted, reactive, ref, watch} from 'vue'
-import {useElementHover, useEventListener, onClickOutside} from '@vueuse/core'
+import {useElementHover, useEventListener, onClickOutside, watchDebounced} from '@vueuse/core'
 import {GitlabFileTreeItem, GitlabService} from '../services/Gitlab.service'
 import {win} from '../utils/common'
 import {useStorage} from '@/common/utils/common'
 import DynamicIcon from './DynamicIcon'
 import {getTextSize} from '@/common/utils/style'
 import GitlabFileViewer from './GitlabFileViewer.vue'
+import type {ElTree} from 'element-plus'
+import type {TreeNodeData} from 'element-plus/es/components/tree/src/tree.type'
+import {Unlock, Lock, FullScreen} from '@element-plus/icons-vue'
+import {useGitlabFileTreeDin} from '../hooks/useGitlabFileTreeDin'
+
+// 文件树 vue 实例
+const fileTreeRef = ref<InstanceType<typeof ElTree>>()
+
+// viewer 实例
+const fileViewerRef = ref<InstanceType<typeof GitlabFileViewer>>()
+
+// 文件搜索关键词
+const fileNameKeywords = ref('')
 
 // 抽屉开关按钮
 const drawerSwitchDom = ref()
@@ -112,7 +154,7 @@ onMounted(() => {
     drawerBodyDom,
     'mouseleave',
     () => {
-      if (drawerVisible.value && isDrawerOpened.value) {
+      if (drawerVisible.value && isDrawerOpened.value && !isDin.value) {
         drawerVisible.value = false
       }
     },
@@ -121,7 +163,7 @@ onMounted(() => {
 
   // 鼠标点击抽屉内容区域外时，关闭抽屉
   onClickOutside(drawerBodyDom, () => {
-    if (drawerVisible.value) {
+    if (drawerVisible.value && !isDin.value) {
       drawerVisible.value = false
     }
   })
@@ -161,6 +203,11 @@ const defaultExpandedKeys = ref<string[]>([])
 // 文件树容器最大宽度（也就是抽屉最大宽度）
 const fileTreeContainerMaxWidth = ref(300)
 
+// 是否固定在侧边
+const {isDin} = useGitlabFileTreeDin({
+  drawerWidth: fileTreeContainerMaxWidth
+})
+
 // gitlab service
 const gitlabService = GitlabService.getInstance()
 
@@ -169,6 +216,7 @@ const [getState, saveState, removeState] = useStorage('segi-gitlab-file-tree-tem
 
 // 临时状态
 const gitlabFileTreeTempState = reactive({
+  fileNameKeywords, // 文件搜索关键词
   fileTree, // 文件树
   drawerVisible, // 抽屉是否显示
   isDrawerOpened, // 抽屉是否已打开
@@ -266,6 +314,9 @@ function getDrawerContentScrollTop(): number {
   return contentEl.scrollTop
 }
 
+/**
+ * 滚动到抽屉内容区域指定位置
+ */
 function setDrawerContentScrollTop(scrollTop: number) {
   const contentEl = document.querySelector<HTMLElement>(`.${drawerBodyClassName} .el-drawer__body`)
   if (!contentEl) return
@@ -309,6 +360,51 @@ function handleFileNodeClick(node: GitlabFileTreeItem) {
     win.location.href = node.fullUrl
   }
 }
+
+/**
+ * 文件节点过滤函数
+ */
+function filterFileNode(value: String, data: TreeNodeData): boolean {
+  if (!value) return true
+  return data.label.includes(value)
+}
+
+// 点击了全屏图标
+function handleFullscreenClick() {
+  fileViewerRef.value!.isFullscreen = !fileViewerRef.value?.isFullscreen
+}
+
+// 点击了固定或解锁固定图标
+function handleDinClick() {
+  isDin.value = !isDin.value
+}
+
+watch(
+  isDin,
+  val => {
+    nextTick().then(() => {
+      // 开启了固定，则抽屉永远为打开状态
+      if (val) drawerVisible.value = true
+    })
+  },
+  {
+    immediate: true
+  }
+)
+
+/**
+ * 如果关键词改变，则调用文件树 vue 实例 filter 方法传进最新的值，执行 filter 流程
+ * 上帝，这里一定要防抖，不然计算量太大
+ */
+watchDebounced(
+  fileNameKeywords,
+  val => {
+    fileTreeRef.value?.filter?.(val)
+  },
+  {
+    debounce: 500
+  }
+)
 
 // 如果文件树存在，则查找当前文件节点
 watch(
@@ -365,7 +461,7 @@ onMounted(async () => {
 }
 
 .segi-gitlab-tree .el-drawer__body {
-  padding: 0 8px 8px;
+  padding: 0 8px 1rem;
 }
 
 .segi-gitlab-tree-popover.el-popover.el-popper {
@@ -374,5 +470,20 @@ onMounted(async () => {
   padding: 8px;
   border: none;
   border-radius: 8px;
+}
+
+/** 移除 drawer shadow 和动画 */
+.segi-gitlab-tree-drawer-body-isDin {
+  box-shadow: none !important;
+  transition: none !important;
+}
+
+.segi-gitlab-tree-drawer-modal-isDin {
+  top: 0 !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: 0 !important;
+  width: var(--drawer-width) !important;
+  height: 100vh !important;
 }
 </style>

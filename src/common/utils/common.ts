@@ -148,5 +148,5 @@ export function useAppContainer(className?: string) {
  * @returns 比特率，1024代表 1kb，1024*1024 代表 1mb
  */
 export function getTextBytes(text: string) {
-  return new TextEncoder().encode(text).length
+  return new TextEncoder().encode(text)?.length ?? 0
 }

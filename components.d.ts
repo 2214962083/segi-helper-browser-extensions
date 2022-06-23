@@ -14,6 +14,7 @@ declare module '@vue/runtime-core' {
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElTree: typeof import('element-plus/es')['ElTree']
+    Loading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
 
