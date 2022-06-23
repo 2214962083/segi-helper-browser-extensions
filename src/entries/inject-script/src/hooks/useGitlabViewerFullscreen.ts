@@ -3,9 +3,15 @@ import {win} from '../utils/common'
 import {useLocalStorage, useStyleTag, useWindowSize} from '@vueuse/core'
 
 export interface UseGitlabViewerFullscreenOptions {
+  /**
+   * 左边需要腾出的空间，主要用于放置抽屉
+   */
   marginLeft: Ref<number>
 }
 
+/**
+ * 全屏看代码
+ */
 export function useGitlabViewerFullscreen(options: UseGitlabViewerFullscreenOptions) {
   const {marginLeft} = options
 
@@ -18,6 +24,8 @@ export function useGitlabViewerFullscreen(options: UseGitlabViewerFullscreenOpti
     if (!isFullscreen.value) return
 
     const windowWidth = win.innerWidth
+
+    // 设置一些溢出滚动
     css.value = `
     html {
       overflow: hidden;
