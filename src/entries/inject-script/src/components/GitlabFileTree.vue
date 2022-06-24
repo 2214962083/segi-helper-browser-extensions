@@ -97,6 +97,9 @@
       :is-din="isDin"
       :drawer-width="fileTreeContainerMaxWidth"
     />
+
+    <!-- gitlab 全局搜索 -->
+    <GitlabSearch />
   </div>
 </template>
 
@@ -114,6 +117,7 @@ import type {ElTree} from 'element-plus'
 import type {TreeNodeData} from 'element-plus/es/components/tree/src/tree.type'
 import {Unlock, Lock, FullScreen} from '@element-plus/icons-vue'
 import {useGitlabFileTreeDin} from '../hooks/useGitlabFileTreeDin'
+import GitlabSearch from './GitlabSearch.vue'
 
 // 文件树 vue 实例
 const fileTreeRef = ref<InstanceType<typeof ElTree>>()
