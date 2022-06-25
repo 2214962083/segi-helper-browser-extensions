@@ -1,1 +1,1 @@
-export * from './BrowserApiService'
+export * from './BrowserApi.service'
