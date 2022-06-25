@@ -6,7 +6,12 @@ export interface ExtensionStorageServiceOptions {
    * sync 为浏览器内部同步到远程
    * local 为浏览器扩展本地存储
    */
-  type: 'local' | 'sync'
+  type?: 'local' | 'sync'
+
+  /**
+   * 存储 key 前缀
+   */
+  namespace?: string
 }
 
 /**
@@ -17,28 +22,37 @@ export class ExtensionStorageService {
   static getInstance = () =>
     ExtensionStorageService._instance || (ExtensionStorageService._instance = new ExtensionStorageService())
 
-  private storage: browser.Storage.StorageArea
+  private _storage: browser.Storage.StorageArea
+  private _namespace: string
 
   constructor(options?: ExtensionStorageServiceOptions) {
-    const {type = 'local'} = options || {}
-    this.storage = type === 'local' ? browser.storage.local : browser.storage.sync
+    const {type = 'local', namespace = ''} = options || {}
+
+    this._namespace = namespace
+    this._storage = type === 'local' ? browser.storage.local : browser.storage.sync
+
     console.log('ExtensionStorageService', this)
   }
 
+  private _getKey = (key: string) => `${this._namespace}_${key}`
+
   async getItem<T = any>(key: string): Promise<T | null> {
-    const result = await this.storage.get(key)
-    return result[key] ? JSON.parse(result[key]) : null
+    const _key = this._getKey(key)
+    const result = await this._storage.get(_key)
+    return result[_key] ? JSON.parse(result[_key]) : null
   }
 
   async setItem<T = any>(key: string, value: T): Promise<void> {
-    return await this.storage.set({[key]: JSON.stringify(value)})
+    const _key = this._getKey(key)
+    return await this._storage.set({[_key]: JSON.stringify(value)})
   }
 
   async removeItem(key: string): Promise<void> {
-    return await this.storage.remove(key)
+    const _key = this._getKey(key)
+    return await this._storage.remove(_key)
   }
 
   async clear(): Promise<void> {
-    return await this.storage.clear()
+    return await this._storage.clear()
   }
 }
