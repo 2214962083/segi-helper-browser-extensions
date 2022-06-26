@@ -118,7 +118,7 @@ export async function sendMessageToCurrentTab<ReturnType extends JsonValue, K ex
   const _dest = typeof destination === 'string' ? parseEndpoint(destination) : destination
   // @ts-ignore
   _dest.tabId = (tab?.id ?? _dest.tabId) || null
-  console.log(_dest)
+  console.log(messageID, _dest)
   return sendMessage(messageID, data, _dest)
 }
 

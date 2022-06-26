@@ -4,9 +4,7 @@ import App from './App.vue'
 import '@/common/styles/global.css'
 import '@unocss/reset/tailwind.css'
 import 'uno.css'
-import './services' // 初始化 services
-import {usePreviewMenu} from './utils/uhomecp-preview'
-import {useGitlabCodeTreeView} from './utils/uhomecp-gitlab-tree'
+import {initFeatureService} from './services'
 import {setNamespace} from 'webext-bridge'
 import {MESSAGE_NAMESPACE} from '@/common/utils/constants'
 
@@ -17,6 +15,5 @@ const appContainer = document.createElement('div')
 document.body.appendChild(appContainer)
 createApp(App).mount(appContainer)
 
-console.log('usePreviewMenu starting...')
-usePreviewMenu(['beta.uhomecp.com'])?.start()
-useGitlabCodeTreeView(['192.168.1.6:9200', 'gitlab.uhomecp.com'])?.start()
+// 初始化功能服务
+initFeatureService()

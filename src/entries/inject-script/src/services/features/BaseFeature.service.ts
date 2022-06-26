@@ -19,7 +19,7 @@ export interface FeatureTask {
 /**
  * 功能服务基类接口
  */
-export interface FeatureService<T extends BaseFeatureServiceEvent> extends EventEmitter<T> {
+export interface FeatureService<T extends BaseFeatureServiceEvent = BaseFeatureServiceEvent> extends EventEmitter<T> {
   isFeatureOn: boolean
   excludeSites: SiteRule[]
   includeSites: SiteRule[]
@@ -47,12 +47,15 @@ export interface BaseFeatureServiceEvent {
  */
 export interface BaseFeatureServiceOptions {
   storageKeyPrefix: string
+  defaultIsFeatureOn?: boolean
+  defaultExcludeSites?: SiteRule[]
+  defaultIncludeSites?: SiteRule[]
 }
 
 /**
  * 功能服务基类
  */
-export class BaseFeatureService<T extends BaseFeatureServiceEvent>
+export class BaseFeatureService<T extends BaseFeatureServiceEvent = BaseFeatureServiceEvent>
   extends EventEmitter<T>
   implements FeatureService<T>
 {
@@ -72,19 +75,34 @@ export class BaseFeatureService<T extends BaseFeatureServiceEvent>
   isFeatureOn!: boolean
 
   /**
+   * isFeatureOn 默认值
+   */
+  defaultIsFeatureOn!: boolean
+
+  /**
    * 排除的网站
    */
   excludeSites!: SiteRule[]
+
+  /**
+   * excludeSites 默认值
+   */
+  defaultExcludeSites!: SiteRule[]
 
   /**
    * 引入的网站
    */
   includeSites!: SiteRule[]
 
+  /**
+   * includeSites 默认值
+   */
+  defaultIncludeSites!: SiteRule[]
+
   constructor(options: BaseFeatureServiceOptions) {
     super()
 
-    const {storageKeyPrefix} = options
+    const {storageKeyPrefix, defaultIsFeatureOn, defaultExcludeSites, defaultIncludeSites} = options
 
     if (!storageKeyPrefix) {
       throw new Error('storageKeyPrefix is required')
@@ -94,19 +112,28 @@ export class BaseFeatureService<T extends BaseFeatureServiceEvent>
     this.extensionStorageService = new ExtensionStorageService({
       namespace: storageKeyPrefix
     })
+
+    this.defaultExcludeSites = defaultExcludeSites ?? []
+
+    this.defaultIncludeSites = defaultIncludeSites ?? [/\*/]
+
+    this.defaultIsFeatureOn = defaultIsFeatureOn ?? true
   }
 
   /**
    * 初始化功能所需的东西
+   * 如果 isFeatureOn 为 true 则执行 mounted
    */
-  init = async () => {
-    const excludeSites = (await this.extensionStorageService.getItem<SiteRule[]>('excludeSites')) ?? []
+  async init() {
+    const excludeSites =
+      (await this.extensionStorageService.getItem<SiteRule[]>('excludeSites')) ?? this.defaultExcludeSites
     this.excludeSites = excludeSites
 
-    const includeSites = (await this.extensionStorageService.getItem<SiteRule[]>('includeSites')) ?? []
+    const includeSites =
+      (await this.extensionStorageService.getItem<SiteRule[]>('includeSites')) ?? this.defaultIncludeSites
     this.includeSites = includeSites
 
-    const isFeatureOn = (await this.extensionStorageService.getItem<boolean>('isFeatureOn')) ?? true
+    const isFeatureOn = (await this.extensionStorageService.getItem<boolean>('isFeatureOn')) ?? this.defaultIsFeatureOn
     isFeatureOn ? await this.turnOn() : await this.turnOff()
 
     return
@@ -116,7 +143,7 @@ export class BaseFeatureService<T extends BaseFeatureServiceEvent>
    * 挂载功能
    * @returns 是否需要走挂载流程
    */
-  mounted = async (): Promise<boolean> => {
+  async mounted(): Promise<boolean> {
     // 卸载再挂载
     this.unmounted()
 
@@ -140,7 +167,7 @@ export class BaseFeatureService<T extends BaseFeatureServiceEvent>
   /**
    *  卸载功能
    */
-  unmounted = async (): Promise<void> => {
+  async unmounted(): Promise<void> {
     // 执行所有卸载任务
     for (const task of this._mountedTasks) {
       await task.stop()
@@ -155,7 +182,7 @@ export class BaseFeatureService<T extends BaseFeatureServiceEvent>
   /**
    * 当前网站是否应该运行这个功能
    */
-  shouldRunInCurrentSite = (): boolean => {
+  shouldRunInCurrentSite(): boolean {
     const currentUrl = win.location.href
     return (
       this.includeSites.some(site => currentUrl.match(site)) && !this.excludeSites.some(site => currentUrl.match(site))
@@ -224,7 +251,7 @@ export class BaseFeatureService<T extends BaseFeatureServiceEvent>
    * 添加挂载脚本任务
    * @param task 任务
    */
-  addMountedScriptTask = (task: FeatureTask) => {
+  addMountedScriptTask(task: FeatureTask) {
     this._mountedTasks.push(task)
   }
 
@@ -233,18 +260,23 @@ export class BaseFeatureService<T extends BaseFeatureServiceEvent>
    * @param vueComponent vue 组件
    * @param selector 选择器或 element
    */
-  addMountedVueComponentTask = (vueComponent: Component, selector: string | Element | null | undefined) => {
+  addMountedVueComponentTask(vueComponent: Component, selector?: string | Element | null | undefined) {
     let app: App | undefined
     let newMountedEl: HTMLElement | undefined
 
     const start = () => {
-      newMountedEl = win.document.createElement('div')
-      const mountedEl: HTMLElement =
+      let mountedEl: HTMLElement | null =
         typeof selector === 'string'
-          ? win.document.querySelector<HTMLElement>(selector) ?? newMountedEl
+          ? win.document.querySelector<HTMLElement>(selector) ?? null
           : selector instanceof Element
           ? (selector as HTMLElement)
-          : newMountedEl
+          : null
+
+      if (!mountedEl) {
+        newMountedEl = win.document.createElement('div')
+        win.document.body.appendChild(newMountedEl)
+        mountedEl = newMountedEl
+      }
 
       app = createApp(vueComponent)
       app.mount(mountedEl)
@@ -265,7 +297,7 @@ export class FeaturesManager {
 
   private _features: FeatureService<BaseFeatureServiceEvent>[] = []
 
-  init = async () => {
+  async init() {
     return await Promise.allSettled(
       this._features.map(async feature => {
         return await feature.init()
@@ -273,7 +305,7 @@ export class FeaturesManager {
     )
   }
 
-  mounted = async () => {
+  async mounted() {
     return await Promise.allSettled(
       this._features.map(async feature => {
         return await feature.mounted()
@@ -281,7 +313,7 @@ export class FeaturesManager {
     )
   }
 
-  unmounted = async () => {
+  async unmounted() {
     return await Promise.allSettled(
       this._features.map(async feature => {
         return await feature.unmounted()
@@ -289,7 +321,7 @@ export class FeaturesManager {
     )
   }
 
-  addFeature = (feature: FeatureService<BaseFeatureServiceEvent>) => {
+  addFeature(feature: FeatureService<BaseFeatureServiceEvent>) {
     this._features.push(feature)
   }
 }
