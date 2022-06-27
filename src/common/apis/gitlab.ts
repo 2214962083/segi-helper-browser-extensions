@@ -107,3 +107,108 @@ export const fetchFileRaw = async (options: FetchFileRawOptions) => {
     return await res.blob()
   }
 }
+
+export interface RemoteGitlabRepo {
+  /**
+   * 仓库 id
+   */
+  id: number
+
+  /**
+   * 仓库描述
+   */
+  description: string
+
+  /**
+   * 仓库名称
+   */
+  name: string
+
+  /**
+   * 带有命名空间的仓库名称
+   */
+  name_with_namespace: string
+
+  /**
+   * 仓库路径
+   */
+  path: string
+
+  /**
+   * 带有命名空间的仓库路径
+   */
+  path_with_namespace: string
+
+  /**
+   * 创建时间
+   */
+  created_at: Date
+
+  /**
+   * 默认分支名称
+   */
+  default_branch: string
+
+  /**
+   * 仓库的 ssh url
+   */
+  ssh_url_to_repo: string
+
+  /**
+   * 仓库的 http url
+   */
+  http_url_to_repo: string
+
+  /**
+   * 仓库 web 地址
+   */
+  web_url: string
+
+  /**
+   * 仓库的 readme 地址
+   */
+  readme_url: string
+
+  /**
+   * 仓库星星数
+   */
+  star_count: number
+
+  /**
+   * 仓库的 fork 数
+   */
+  forks_count: number
+
+  /**
+   * 最近更新时间
+   */
+  last_activity_at: Date
+
+  /**
+   * 是否公开
+   */
+  public_jobs: boolean
+}
+
+export interface SearchReposOptions {
+  /**
+   * 仓库名称
+   */
+  name: string
+}
+
+/**
+ * 搜索 gitlab 仓库
+ */
+export const searchReposByName = (options: SearchReposOptions): Promise<RemoteGitlabRepo[]> => {
+  const {name} = options
+
+  // 请求路径
+  const url = `${gitlabBaseUrl}/api/v4/projects?search=${name}`
+
+  return http(url, {
+    cacheSessionStorage: true,
+    formatType: 'json',
+    resolveCondition: data => Array.isArray(data)
+  })
+}

@@ -31,28 +31,27 @@
       </div>
 
       <!-- 搜索结果 -->
-      <div v-for="(tab, tabIndex) in tabs" v-show="tabIndex === activeTabIndex && !loading" :key="tabIndex">
-        <GlobalSearchResultList :visible="tabIndex === activeTabIndex" :search-result="searchResult">
+      <div v-for="(tab, tabIndex) in tabs" v-show="tabIndex === activeTabIndex" :key="tabIndex">
+        <GlobalSearchResultList
+          :visible="tabIndex === activeTabIndex"
+          :search-fn="searchFn"
+          :tab="tab"
+          :keywords="keywords"
+          :item-height="itemHeight"
+        >
           <template #default="{item, index, list}">
             <slot :name="tab.slotName" :tab="tab" :item="item" :index="index" :list="list"></slot>
           </template>
         </GlobalSearchResultList>
       </div>
-
-      <!-- 加载中 -->
-      <div
-        v-show="loading"
-        v-loading="loading"
-        class="global-search-loading h-400px w-full flex justify-center items-center"
-      ></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {computed, PropType, ref, watch} from 'vue'
-import {onClickOutside, useMagicKeys, watchDebounced} from '@vueuse/core'
+import {PropType, ref, watch} from 'vue'
+import {onClickOutside, useMagicKeys} from '@vueuse/core'
 import {ElInput} from 'element-plus'
 import GlobalSearchResultList from './GlobalSearchResultList.vue'
 import {GlobalSearchFetchFn, GlobalSearchTab} from './GlobalSearch.types'
@@ -74,9 +73,20 @@ const props = defineProps({
     default: 0
   },
 
+  /**
+   * 搜索函数
+   */
   searchFn: {
     type: Function as PropType<GlobalSearchFetchFn>,
     default: () => () => Promise.resolve([])
+  },
+
+  /**
+   * 列表项高度
+   */
+  itemHeight: {
+    type: Number,
+    default: 64
   }
 })
 
@@ -96,21 +106,13 @@ const visible = ref(false)
 // 搜索关键字
 const keywords = ref('')
 
-// 是否正在搜索中
-const loading = ref(false)
-
-// 搜索结果
-const searchResult = ref<any[]>([])
-
-// 当前 tab
-const currentTab = computed(() => props.tabs[props.activeTabIndex])
-
 // 监听键盘组合键
 // see: https://vueuse.org/core/useMagicKeys/
-const {Ctrl_k, ArrowRight, ArrowLeft} = useMagicKeys({
+const {Ctrl_k, ArrowRight, ArrowLeft, Tab, Shift_Tab} = useMagicKeys({
   passive: false,
   onEventFired(e) {
     if (e.ctrlKey && e.key === 'k') e.preventDefault()
+    if (e.key === 'Tab') e.preventDefault()
   }
 })
 
@@ -130,23 +132,37 @@ watch(Ctrl_k, val => {
 })
 
 /**
- * 点击左键切换 tab
+ * 往左走一个 tab
  */
-watch(ArrowLeft, val => {
-  if (!val) return
+function toLeftTab() {
   let index = props.activeTabIndex - 1
   index = index < 0 ? props.tabs.length - 1 : index
   emit('update:activeTabIndex', index)
+}
+
+/**
+ * 往右走一个 tab
+ */
+function toRightTab() {
+  let index = props.activeTabIndex + 1
+  index = index >= props.tabs.length ? 0 : index
+  emit('update:activeTabIndex', index)
+}
+
+/**
+ * 点击左键切换 tab
+ */
+watch([ArrowLeft, Shift_Tab], () => {
+  if (!ArrowLeft.value && !Shift_Tab.value) return
+  toLeftTab()
 })
 
 /**
  * 点击右键切换 tab
  */
-watch(ArrowRight, val => {
-  if (!val) return
-  let index = props.activeTabIndex + 1
-  index = index >= props.tabs.length ? 0 : index
-  emit('update:activeTabIndex', index)
+watch([ArrowRight, Tab], () => {
+  if (!ArrowRight.value && !Tab.value) return
+  !Shift_Tab.value && toRightTab()
 })
 
 /**
@@ -154,21 +170,6 @@ watch(ArrowRight, val => {
  */
 watch(visible, val => {
   if (val) searchInputRef.value?.focus()
-})
-
-/**
- * 当关键词变化时，搜索
- */
-watchDebounced(keywords, async val => {
-  const words = val.trim()
-  if (!words) {
-    searchResult.value = []
-    return
-  }
-  loading.value = true
-  searchResult.value = await props.searchFn(words, currentTab.value).finally(() => {
-    loading.value = false
-  })
 })
 </script>
 
