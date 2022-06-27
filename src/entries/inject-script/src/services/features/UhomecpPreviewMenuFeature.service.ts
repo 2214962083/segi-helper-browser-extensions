@@ -3,21 +3,11 @@ import {debounce} from 'lodash-es'
 import {win} from '../../utils/common'
 import {RemoteUhomecpMenu} from '../../utils/uhomecp-menu'
 import {usePreviewLink} from '../../utils/preview-link'
-import {
-  BaseFeatureService,
-  BaseFeatureServiceEvent,
-  BaseFeatureServiceOptions,
-  FeatureService,
-  FeatureTask
-} from './BaseFeature.service'
+import {BaseFeatureService, BaseFeatureServiceOptions, FeatureService, FeatureTask} from './BaseFeature.service'
 
-export type UhomecpPreviewMenuFeatureServiceEvent = BaseFeatureServiceEvent
 export type UhomecpPreviewMenuFeatureServiceOptions = Omit<BaseFeatureServiceOptions, 'storageKeyPrefix'>
 
-export class UhomecpPreviewMenuFeatureService
-  extends BaseFeatureService<UhomecpPreviewMenuFeatureServiceEvent>
-  implements FeatureService<UhomecpPreviewMenuFeatureServiceEvent>
-{
+export class UhomecpPreviewMenuFeatureService extends BaseFeatureService implements FeatureService {
   menuResIdMap?: Map<string, RemoteUhomecpMenu>
 
   constructor(options?: UhomecpPreviewMenuFeatureServiceOptions) {

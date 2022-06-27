@@ -85,8 +85,6 @@ export class ExtensionStorageService {
 
     this._namespace = namespace
     this._storage = type === 'local' ? new ExtensionStoragePolyfill('local') : new ExtensionStoragePolyfill('sync')
-
-    console.log('ExtensionStorageService', this)
   }
 
   private _getKey = (key: string) => `${this._namespace}_${key}`

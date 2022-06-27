@@ -1,9 +1,10 @@
 import {FeaturesManager} from './BaseFeature.service'
-import {GitlabFeatureService} from './GitlabFeature.service'
+import {GitlabGlobalSearchFeatureService} from './GitlabGlobalSearchFeature'
+import {GitlabViewerFeatureService} from './GitlabViewerFeature.service'
 import {UhomecpPreviewMenuFeatureService} from './UhomecpPreviewMenuFeature.service'
 
 export * from './BaseFeature.service'
-export * from './GitlabFeature.service'
+export * from './GitlabViewerFeature.service'
 export * from './UhomecpPreviewMenuFeature.service'
 
 /**
@@ -11,7 +12,8 @@ export * from './UhomecpPreviewMenuFeature.service'
  */
 export async function initFeatureService() {
   const featuresManager = FeaturesManager.getInstance()
-  featuresManager.addFeature(new GitlabFeatureService())
+  featuresManager.addFeature(new GitlabGlobalSearchFeatureService())
+  featuresManager.addFeature(new GitlabViewerFeatureService())
   featuresManager.addFeature(new UhomecpPreviewMenuFeatureService())
   await featuresManager.init()
   return featuresManager

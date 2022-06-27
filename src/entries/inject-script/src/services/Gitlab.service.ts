@@ -182,6 +182,17 @@ export class GitlabService {
   }
 
   /**
+   * 抹平文件树
+   */
+  flattenFileTree(fileTree: GitlabFileTreeItem[]) {
+    const finalTree: GitlabFileTreeItem[] = []
+    this.traverseFileTree(fileTree, item => {
+      finalTree.push(item)
+    })
+    return finalTree
+  }
+
+  /**
    * 根据文件路径获取文件 url
    * @param filepath 文件路径
    * @param isFile 是否是文件
