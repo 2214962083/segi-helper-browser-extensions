@@ -29,18 +29,48 @@ import {
   UhomecpPreviewMenuFeatureService
 } from '@/common/services/features'
 import {useInit} from '@/entries/inject-script/src/hooks/useInit'
+import {Class} from 'type-fest'
 import {onMounted, ref} from 'vue'
 
+/**
+ * 设置功能编码
+ */
 enum SettingCode {
+  /**
+   * uhomecp 全局搜索功能开关
+   */
   uhomecpGlobalSearch = 'uhomecpGlobalSearch',
+
+  /**
+   * uhomecp 预览功能开关
+   */
   uhomecpMenuPreview = 'uhomecpMenuPreview',
+
+  /**
+   * gitlab 全局搜索功能开关
+   */
   gitlabGlobalSearch = 'gitlabGlobalSearch',
+
+  /**
+   * gitlab 代码浏览功能开关
+   */
   gitlabFileViewer = 'gitlabFileViewer'
 }
 
 interface Setting {
+  /**
+   * 设置标题
+   */
   title: string
+
+  /**
+   * 设置编码
+   */
   code: SettingCode
+
+  /**
+   * 功能状态
+   */
   status: boolean
 }
 
@@ -68,39 +98,60 @@ const settings = ref<Setting[]>([
   }
 ])
 
+// 功能管理器
 const featuresManager = FeaturesManager.getInstance()
-let gitlabGlobalSearchFeatureService: GitlabGlobalSearchFeatureService | undefined
-let gitlabViewerFeatureService: GitlabViewerFeatureService | undefined
-let uhomecpGlobalSearchFeatureService: UhomecpGlobalSearchFeatureService | undefined
-let uhomecpPreviewMenuFeatureService: UhomecpPreviewMenuFeatureService | undefined
 
+// 功能编码和功能服务实例映射
 const featureCodeMap = new Map<SettingCode, BaseFeatureService | undefined>()
 
+// 初始化一次
 const {init: initSettings} = useInit({
   initFn: async () => {
-    gitlabGlobalSearchFeatureService = featuresManager.findService(GitlabGlobalSearchFeatureService)
-    gitlabViewerFeatureService = featuresManager.findService(GitlabViewerFeatureService)
-    uhomecpGlobalSearchFeatureService = featuresManager.findService(UhomecpGlobalSearchFeatureService)
-    uhomecpPreviewMenuFeatureService = featuresManager.findService(UhomecpPreviewMenuFeatureService)
-    featureCodeMap.set(SettingCode.gitlabGlobalSearch, gitlabGlobalSearchFeatureService)
-    featureCodeMap.set(SettingCode.gitlabFileViewer, gitlabViewerFeatureService)
-    featureCodeMap.set(SettingCode.uhomecpGlobalSearch, uhomecpGlobalSearchFeatureService)
-    featureCodeMap.set(SettingCode.uhomecpMenuPreview, uhomecpPreviewMenuFeatureService)
+    // 功能构造类和编码关系
+    const featureConstructorCodeConfigs: Array<{code: SettingCode; featureConstructor: Class<BaseFeatureService>}> = [
+      {
+        code: SettingCode.uhomecpGlobalSearch,
+        featureConstructor: UhomecpGlobalSearchFeatureService
+      },
+      {
+        code: SettingCode.uhomecpMenuPreview,
+        featureConstructor: UhomecpPreviewMenuFeatureService
+      },
+      {
+        code: SettingCode.gitlabGlobalSearch,
+        featureConstructor: GitlabGlobalSearchFeatureService
+      },
+      {
+        code: SettingCode.gitlabFileViewer,
+        featureConstructor: GitlabViewerFeatureService
+      }
+    ]
 
+    // 保存功能编码和功能服务实例映射
+    featureConstructorCodeConfigs.forEach(({code, featureConstructor}) => {
+      const feature = featuresManager.findService(featureConstructor)
+      featureCodeMap.set(code, feature)
+    })
+
+    // 同步功能状态
     const featureServiceSyncStatus = <T extends InstanceType<typeof BaseFeatureService>>(
       featureService: T | undefined,
       code: SettingCode
     ) => {
+      // 当前编码设置
       const currentSetting = settings.value.find(setting => setting.code === code)
       if (!currentSetting || !featureService) return
 
+      // 设置开关状态
       currentSetting.status = featureService.isFeatureOn
 
+      // 打开功能
       featureService.on('turnOn', () => {
         console.log('turn on', code)
         currentSetting.status = true
       })
 
+      // 关闭功能
       featureService.on('turnOff', () => {
         console.log('turnOff', code)
         currentSetting.status = false
