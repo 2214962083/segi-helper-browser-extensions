@@ -1,6 +1,7 @@
 import {FeaturesManager} from './BaseFeature.service'
 import {GitlabGlobalSearchFeatureService} from './GitlabGlobalSearchFeature'
 import {GitlabViewerFeatureService} from './GitlabViewerFeature.service'
+import {UhomecpGlobalSearchFeatureService} from './UhomecpGlobalSearchFeature'
 import {UhomecpPreviewMenuFeatureService} from './UhomecpPreviewMenuFeature.service'
 
 export * from './BaseFeature.service'
@@ -15,6 +16,7 @@ export async function initFeatureService() {
   featuresManager.addFeature(new GitlabGlobalSearchFeatureService())
   featuresManager.addFeature(new GitlabViewerFeatureService())
   featuresManager.addFeature(new UhomecpPreviewMenuFeatureService())
+  featuresManager.addFeature(new UhomecpGlobalSearchFeatureService())
   await featuresManager.init()
   return featuresManager
 }

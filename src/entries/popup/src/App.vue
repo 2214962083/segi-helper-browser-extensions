@@ -11,9 +11,8 @@
       ></MyMenu>
     </div>
     <div class="blank w-full h-8"></div>
-    <SearchMenu v-show="menuActive === MenuKey.searchUhomecpMenu"></SearchMenu>
-    <CollectMenu v-show="menuActive === MenuKey.collectUhomecpMenu"></CollectMenu>
     <Settings v-show="menuActive === MenuKey.settings"></Settings>
+    <Helper v-show="menuActive === MenuKey.helper"></Helper>
     <About v-show="menuActive === MenuKey.about"></About>
   </div>
 </template>
@@ -22,31 +21,25 @@
 import {ref} from 'vue'
 import MyMenu from '@/common/components/Menu.vue'
 import {Menu} from '@/common/components/Menu.type'
-import SearchMenu from './views/tabs/SearchMenu.vue'
-import CollectMenu from './views/tabs/CollectMenu.vue'
 import Settings from './views/tabs/Settings.vue'
+import Helper from './views/tabs/Helper.vue'
 import About from './views/tabs/About.vue'
 
 enum MenuKey {
-  searchUhomecpMenu = 'searchUhomecpMenu',
-  collectUhomecpMenu = 'collectUhomecpMenu',
   settings = 'settings',
+  helper = 'helper',
   about = 'about'
 }
 
-const menuActive = ref(MenuKey.searchUhomecpMenu)
+const menuActive = ref(MenuKey.settings)
 const menus = ref<Menu[]>([
-  {
-    key: MenuKey.searchUhomecpMenu,
-    title: '搜索菜单'
-  },
-  {
-    key: MenuKey.collectUhomecpMenu,
-    title: '收藏菜单'
-  },
   {
     key: MenuKey.settings,
     title: '设置'
+  },
+  {
+    key: MenuKey.helper,
+    title: '帮助'
   },
   {
     key: MenuKey.about,

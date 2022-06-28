@@ -108,11 +108,11 @@ const keywords = ref('')
 
 // 监听键盘组合键
 // see: https://vueuse.org/core/useMagicKeys/
-const {Ctrl_k, ArrowRight, ArrowLeft, Tab, Shift_Tab} = useMagicKeys({
+const {Ctrl_k, Tab, Shift_Tab} = useMagicKeys({
   passive: false,
   onEventFired(e) {
     if (e.ctrlKey && e.key === 'k') e.preventDefault()
-    if (e.key === 'Tab') e.preventDefault()
+    if (e.key === 'Tab') visible.value && e.preventDefault()
   }
 })
 
@@ -150,18 +150,18 @@ function toRightTab() {
 }
 
 /**
- * 点击左键切换 tab
+ * shift + tab 向左切换 tab
  */
-watch([ArrowLeft, Shift_Tab], () => {
-  if (!ArrowLeft.value && !Shift_Tab.value) return
+watch([Shift_Tab], () => {
+  if (!Shift_Tab.value) return
   toLeftTab()
 })
 
 /**
- * 点击右键切换 tab
+ * tab 向右切换 tab
  */
-watch([ArrowRight, Tab], () => {
-  if (!ArrowRight.value && !Tab.value) return
+watch([Tab], () => {
+  if (!Tab.value) return
   !Shift_Tab.value && toRightTab()
 })
 

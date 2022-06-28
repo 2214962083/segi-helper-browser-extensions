@@ -13,7 +13,7 @@ export class UhomecpPreviewMenuFeatureService extends BaseFeatureService impleme
   constructor(options?: UhomecpPreviewMenuFeatureServiceOptions) {
     super({
       storageKeyPrefix: 'UhomecpPreviewMenuFeatureService',
-      defaultIncludeSites: ['beta.uhomecp.com'],
+      defaultIncludeSites: ['192.168.1.11:10060', 'beta.uhomecp.com'],
       ...options
     })
   }

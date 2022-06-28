@@ -1,7 +1,12 @@
 slot
 <template>
   <!-- eslint-disable vue/no-multiple-template-root -->
-  <div v-show="visible" v-bind="$attrs" ref="resultDom" class="global-search-result max-h-400px relative overflow-auto">
+  <div
+    v-show="visible && searchResult.length"
+    v-bind="$attrs"
+    ref="resultDom"
+    class="global-search-result max-h-400px relative overflow-auto"
+  >
     <!-- 列表容器 -->
     <div v-bind="listContainerProps" class="global-search-listbox-container max-h-400px w-full">
       <!-- 列表包裹 -->
@@ -33,6 +38,14 @@ slot
     v-loading="loading"
     class="global-search-loading h-400px w-full flex justify-center items-center"
   ></div>
+
+  <!-- 无数据 -->
+  <div
+    v-show="visible && !loading && !searchResult.length"
+    class="global-search-empty h-400px w-full flex justify-center items-center"
+  >
+    啥也没有
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -246,12 +259,20 @@ function setActive(index: number) {
   activeIndex.value = index
 }
 
+// 上一次请求的关键词
+const lastFetchKeywords = ref('')
+
 /**
  * 当关键词变化时，搜索
  */
 watchDebounced(
   [propsKeywords, propsVisible],
-  async () => {
+  async newVal => {
+    const [newKeywords, newVisible] = newVal as [string, boolean]
+
+    // 当前 tab 为隐藏时或者本次关键词和上次请求关键词相同时，不做任何操作
+    if (!newVisible || newKeywords.trim() === lastFetchKeywords.value) return
+
     const words = propsKeywords.value.trim()
     if (!words) {
       searchResult.value = []
@@ -262,6 +283,8 @@ watchDebounced(
     searchResult.value = await props.searchFn(words, props.tab).finally(() => {
       loading.value = false
     })
+
+    lastFetchKeywords.value = words
   },
   {
     deep: true,

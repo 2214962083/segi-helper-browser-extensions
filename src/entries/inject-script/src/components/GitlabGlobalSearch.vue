@@ -25,6 +25,7 @@ import {searchReposByName} from '@/common/apis/gitlab'
 import {GlobalSearchFetchFn, GlobalSearchTab} from '@/common/components/GlobalSearch/GlobalSearch.types'
 import GlobalSearch from '@/common/components/GlobalSearch/GlobalSearch.vue'
 import {onMounted, ref} from 'vue'
+import {useInit} from '../hooks/useInit'
 import {GitlabFileTreeItem, GitlabService} from '../services'
 import {win} from '../utils/common'
 import DynamicIcon from './DynamicIcon'
@@ -34,12 +35,6 @@ const activeTabIndex = ref(0)
 
 // gitlab 当前仓库文件列表
 const gitlabFiles = ref<GitlabFileTreeItem[]>([])
-
-// 是否已经加载了文件列表
-const isInitGitlabFiles = ref(false)
-
-// 是否正在加载文件列表
-const isRequestingGitlabFiles = ref(false)
 
 // 搜索类型 tabs
 const searchTabs: GlobalSearchTab[] = [
@@ -84,27 +79,20 @@ const gitlabService = GitlabService.getInstance()
 /**
  * 初始化 gitlab 仓库文件列表
  */
-async function initGitlabFiles() {
-  if (isInitGitlabFiles.value) return
-  if (isRequestingGitlabFiles.value) return
+const {init: initGitlabFiles} = useInit({
+  initFn: async () => {
+    // 初始化 gitlab service
+    gitlabService.init()
 
-  isRequestingGitlabFiles.value = true
+    if (gitlabService.isRepoPage) {
+      // 获取文件树
+      const fileTree = await gitlabService.getAllFileTree()
 
-  // 初始化 gitlab service
-  gitlabService.init()
-
-  if (gitlabService.isRepoPage) {
-    // 获取文件树
-    const fileTree = await gitlabService.getAllFileTree()
-
-    // 抹平文件树并存储
-    gitlabFiles.value = gitlabService.flattenFileTree(fileTree)
+      // 抹平文件树并存储
+      gitlabFiles.value = gitlabService.flattenFileTree(fileTree)
+    }
   }
-
-  isRequestingGitlabFiles.value = false
-  isInitGitlabFiles.value = true
-}
-
+})
 onMounted(async () => {
   initGitlabFiles()
 })

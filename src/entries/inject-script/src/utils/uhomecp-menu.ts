@@ -60,12 +60,12 @@ export interface FindMenusOptions {
   /**
    * 菜单名称，支持正则，支持模糊查询
    */
-  name: string
+  name?: string
 
   /**
    * 单路径，支持正则，支持模糊查询
    */
-  url: string
+  url?: string
 
   /**
    * 是否返回菜单的完整信息，默认 true
@@ -83,8 +83,8 @@ export interface FindMenusOptions {
  */
 export async function findMenus({name, url, showMoreInfo = true, autoLog = true}: FindMenusOptions) {
   interface PrivateFindMenusOptions {
-    name: string
-    url: string
+    name?: string
+    url?: string
     showMoreInfo?: boolean
     _list?: RemoteUhomecpMenu[]
     _prefixPathName?: string
