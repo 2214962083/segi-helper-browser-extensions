@@ -6,7 +6,9 @@ import {UhomecpPreviewMenuFeatureService} from './UhomecpPreviewMenuFeature.serv
 
 export * from './BaseFeature.service'
 export * from './GitlabViewerFeature.service'
+export * from './GitlabGlobalSearchFeature'
 export * from './UhomecpPreviewMenuFeature.service'
+export * from './UhomecpGlobalSearchFeature'
 
 /**
  * 初始化所有功能

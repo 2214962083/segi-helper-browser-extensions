@@ -1,6 +1,7 @@
-import {GitlabService} from '../Gitlab.service'
-import GitlabFileTree from '../../components/GitlabFileTree.vue'
+import {GitlabService} from '@/entries/inject-script/src/services/Gitlab.service'
+import GitlabFileTree from '@/entries/inject-script/src/components/GitlabFileTree.vue'
 import {BaseFeatureService, BaseFeatureServiceOptions, FeatureService} from './BaseFeature.service'
+import {GITLAB_VIEWER_STORAGE_NAMESPACE} from '@/common/utils/constants'
 
 export type GitlabViewerFeatureServiceOptions = Omit<BaseFeatureServiceOptions, 'storageKeyPrefix'>
 
@@ -9,7 +10,7 @@ export class GitlabViewerFeatureService extends BaseFeatureService implements Fe
 
   constructor(options?: GitlabViewerFeatureServiceOptions) {
     super({
-      storageKeyPrefix: 'GitlabViewerFeatureService',
+      storageKeyPrefix: GITLAB_VIEWER_STORAGE_NAMESPACE,
       defaultIncludeSites: ['192.168.1.6:9200', 'gitlab.uhomecp.com'],
       ...options
     })

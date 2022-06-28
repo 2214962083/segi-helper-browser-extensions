@@ -3,5 +3,10 @@ import App from './App.vue'
 import '@/common/styles/global.css'
 import '@unocss/reset/tailwind.css'
 import 'uno.css'
+import {initFeatureService} from '@/common/services/features'
 
-createApp(App).mount('#app')
+async function main() {
+  await initFeatureService()
+  createApp(App).mount('#app')
+}
+main()

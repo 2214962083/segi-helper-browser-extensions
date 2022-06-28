@@ -10,15 +10,11 @@ export function OnMessage(id: string): MethodDecorator {
   return function (target: any, propertyKey: string | symbol) {
     const method = target[propertyKey]
 
-    if (method === undefined) {
-      return
-    }
+    if (!method || typeof method !== 'function') return
 
-    if (typeof method === 'function') {
-      onMessage(id, ({data}) => {
-        // @ts-ignore
-        return method.call(target, ...data)
-      })
-    }
+    onMessage(id, ({data}) => {
+      // @ts-ignore
+      return method.call(target, ...data)
+    })
   }
 }

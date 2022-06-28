@@ -176,8 +176,8 @@ watch(visible, val => {
 <style>
 .global-search-input .el-input__wrapper {
   padding: 12px;
-  border: none;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 .global-search-input input {
   width: 100%;

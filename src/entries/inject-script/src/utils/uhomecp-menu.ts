@@ -123,8 +123,12 @@ export async function findMenus({name, url, showMoreInfo = true, autoLog = true}
           url: menuUrl
         } as PrivateMenu
         _menu.pathName = _prefixPathName + menuName
+
         if (!_menu.id) _menu.id = valToHash(_menu.pathName) // 如果没有 id，则生成一个
-        findResult.push(_menu)
+        if (_menu.url !== '#') {
+          // url 为 # 时, 该菜单非最终级别菜单,没有 url ,不给予展示
+          findResult.push(_menu)
+        }
       }
 
       if (menuChildren && menuChildren.length) {

@@ -12,12 +12,11 @@ export type ExtensionStorageType = 'local' | 'sync'
 export class ExtensionStoragePolyfill implements browser.Storage.StorageArea {
   private _type: ExtensionStorageType
 
+  private _isWindow: boolean
+
   constructor(type: ExtensionStorageType) {
     this._type = type
-  }
-
-  private _getIsBrowser() {
-    return !browser?.storage?.local && Boolean(window)
+    this._isWindow = !browser?.storage?.local && Boolean(window)
   }
 
   private _getMessageId(methodName: string) {
@@ -25,14 +24,14 @@ export class ExtensionStoragePolyfill implements browser.Storage.StorageArea {
   }
 
   async get(keys?: null | string | string[] | Record<string, any>): Promise<Record<string, any>> {
-    if (!this._getIsBrowser()) return await browser.storage[this._type].get(keys)
+    if (!this._isWindow) return await browser.storage[this._type].get(keys)
 
     const messageId = this._getMessageId('get')
     return await sendMessageToCurrentTab(messageId, [keys!], 'background')
   }
 
   async set(items: Record<string, any>): Promise<void> {
-    if (!this._getIsBrowser()) return await browser.storage[this._type].set(items)
+    if (!this._isWindow) return await browser.storage[this._type].set(items)
 
     const messageId = this._getMessageId('set')
     await sendMessageToCurrentTab(messageId, [items], 'background')
@@ -40,7 +39,7 @@ export class ExtensionStoragePolyfill implements browser.Storage.StorageArea {
   }
 
   async remove(keys: string | string[]): Promise<void> {
-    if (!this._getIsBrowser()) return await browser.storage[this._type].remove(keys)
+    if (!this._isWindow) return await browser.storage[this._type].remove(keys)
 
     const messageId = this._getMessageId('remove')
     await sendMessageToCurrentTab(messageId, [keys], 'background')
@@ -48,7 +47,7 @@ export class ExtensionStoragePolyfill implements browser.Storage.StorageArea {
   }
 
   async clear(): Promise<void> {
-    if (!this._getIsBrowser()) return await browser.storage[this._type].clear()
+    if (!this._isWindow) return await browser.storage[this._type].clear()
 
     const messageId = this._getMessageId('clear')
     await sendMessageToCurrentTab(messageId, [], 'background')

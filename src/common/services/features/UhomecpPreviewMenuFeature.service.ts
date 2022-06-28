@@ -1,9 +1,10 @@
 import {fetchMenuList} from '@/common/apis/uhomecp'
 import {debounce} from 'lodash-es'
-import {win} from '../../utils/common'
-import {RemoteUhomecpMenu} from '../../utils/uhomecp-menu'
-import {usePreviewLink} from '../../utils/preview-link'
+import {win} from '@/entries/inject-script/src/utils/common'
+import {RemoteUhomecpMenu} from '@/entries/inject-script/src/utils/uhomecp-menu'
+import {usePreviewLink} from '@/entries/inject-script/src/utils/preview-link'
 import {BaseFeatureService, BaseFeatureServiceOptions, FeatureService, FeatureTask} from './BaseFeature.service'
+import {UHOMECP_PREVIEW_MENU_STORAGE_NAMESPACE} from '@/common/utils/constants'
 
 export type UhomecpPreviewMenuFeatureServiceOptions = Omit<BaseFeatureServiceOptions, 'storageKeyPrefix'>
 
@@ -12,7 +13,7 @@ export class UhomecpPreviewMenuFeatureService extends BaseFeatureService impleme
 
   constructor(options?: UhomecpPreviewMenuFeatureServiceOptions) {
     super({
-      storageKeyPrefix: 'UhomecpPreviewMenuFeatureService',
+      storageKeyPrefix: UHOMECP_PREVIEW_MENU_STORAGE_NAMESPACE,
       defaultIncludeSites: ['192.168.1.11:10060', 'beta.uhomecp.com'],
       ...options
     })
@@ -23,7 +24,7 @@ export class UhomecpPreviewMenuFeatureService extends BaseFeatureService impleme
 
     await super.init()
 
-    console.log('UhomecpPreviewMenuFeatureService init')
+    console.log('UhomecpPreviewMenuFeatureService init', this)
   }
 
   /**
