@@ -6,6 +6,9 @@ export interface SelectOption {
   value: string
 }
 
+/**
+ * 四格常用响应体
+ */
 export type UhomecpResWrapper<T = any> = {
   code: '0' | '1'
   message: string

@@ -40,7 +40,7 @@ export default defineConfig(({mode}) => {
         outputJsName: 'inject-script.js',
         entryHtml: pathResolve('src/entries/inject-script/index.html'),
         htmlMatchRegExp: /html-regexp-inject-script/
-      }),
+      }), // 用于注入 js 到页面的插件
       svgLoader({
         defaultImport: 'component'
       }), // 默认引入 svg 为 component

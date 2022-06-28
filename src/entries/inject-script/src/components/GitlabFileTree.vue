@@ -89,6 +89,7 @@
       代码目录
     </div>
 
+    <!-- 重写文件浏览器,遇到代码重新染色 -->
     <GitlabFileViewer
       ref="fileViewerRef"
       :repo-name="gitlabService.repoTitle"

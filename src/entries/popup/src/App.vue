@@ -11,6 +11,8 @@
       ></MyMenu>
     </div>
     <div class="blank w-full h-8"></div>
+
+    <!-- tab 页 -->
     <Settings v-show="menuActive === MenuKey.settings"></Settings>
     <Helper v-show="menuActive === MenuKey.helper"></Helper>
     <About v-show="menuActive === MenuKey.about"></About>

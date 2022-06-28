@@ -8,6 +8,9 @@ import {UHOMECP_PREVIEW_MENU_STORAGE_NAMESPACE} from '@/common/utils/constants'
 
 export type UhomecpPreviewMenuFeatureServiceOptions = Omit<BaseFeatureServiceOptions, 'storageKeyPrefix'>
 
+/**
+ * Uhomecp 预览菜单功能服务
+ */
 export class UhomecpPreviewMenuFeatureService extends BaseFeatureService implements FeatureService {
   menuResIdMap?: Map<string, RemoteUhomecpMenu>
 

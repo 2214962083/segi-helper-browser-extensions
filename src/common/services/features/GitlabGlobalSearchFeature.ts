@@ -5,6 +5,9 @@ import {GITLAB_GLOBAL_SEARCH_STORAGE_NAMESPACE} from '@/common/utils/constants'
 
 export type GitlabGlobalSearchFeatureServiceOptions = Omit<BaseFeatureServiceOptions, 'storageKeyPrefix'>
 
+/**
+ * gitlab 全局搜索功能服务
+ */
 export class GitlabGlobalSearchFeatureService extends BaseFeatureService implements FeatureService {
   gitlabService: GitlabService
 

@@ -5,6 +5,9 @@ import {GITLAB_VIEWER_STORAGE_NAMESPACE} from '@/common/utils/constants'
 
 export type GitlabViewerFeatureServiceOptions = Omit<BaseFeatureServiceOptions, 'storageKeyPrefix'>
 
+/**
+ * gitlab 代码浏览功能服务
+ */
 export class GitlabViewerFeatureService extends BaseFeatureService implements FeatureService {
   gitlabService: GitlabService
 

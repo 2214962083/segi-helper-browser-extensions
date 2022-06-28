@@ -12,6 +12,7 @@ export * from './UhomecpGlobalSearchFeature'
 
 /**
  * 初始化所有功能
+ * 注意,不管在任何窗口, 只能初始化一次, 请勿在同一个 context 重复初始化
  */
 export async function initFeatureService() {
   const featuresManager = FeaturesManager.getInstance()

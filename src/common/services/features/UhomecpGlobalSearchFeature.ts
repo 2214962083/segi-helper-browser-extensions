@@ -4,6 +4,9 @@ import {BaseFeatureService, BaseFeatureServiceOptions, FeatureService} from './B
 
 export type UhomecpGlobalSearchFeatureServiceOptions = Omit<BaseFeatureServiceOptions, 'storageKeyPrefix'>
 
+/**
+ * Uhomecp 全局搜索功能服务
+ */
 export class UhomecpGlobalSearchFeatureService extends BaseFeatureService implements FeatureService {
   constructor(options?: UhomecpGlobalSearchFeatureServiceOptions) {
     super({

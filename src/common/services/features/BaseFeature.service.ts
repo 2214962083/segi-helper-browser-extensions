@@ -374,12 +374,21 @@ export class BaseFeatureService<T extends BaseFeatureServiceEvent = BaseFeatureS
   }
 }
 
+/**
+ * 功能服务管理器
+ */
 export class FeaturesManager {
   static _instance: FeaturesManager
   static getInstance = () => FeaturesManager._instance || (FeaturesManager._instance = new FeaturesManager())
 
+  /**
+   * 所有的功能服务实例
+   */
   private _features: FeatureService<BaseFeatureServiceEvent>[] = []
 
+  /**
+   * 执行所有的功能的初始化
+   */
   async init() {
     return await Promise.allSettled(
       this._features.map(async feature => {
@@ -388,6 +397,9 @@ export class FeaturesManager {
     )
   }
 
+  /**
+   * 执行所有的功能的挂载
+   */
   async mounted() {
     return await Promise.allSettled(
       this._features.map(async feature => {
@@ -396,6 +408,9 @@ export class FeaturesManager {
     )
   }
 
+  /**
+   * 执行所有的功能的卸载
+   */
   async unmounted() {
     return await Promise.allSettled(
       this._features.map(async feature => {
@@ -404,14 +419,27 @@ export class FeaturesManager {
     )
   }
 
+  /**
+   * 添加功能服务实例
+   * @param feature 功能服务实例
+   */
   addFeature(feature: FeatureService<BaseFeatureServiceEvent>) {
     this._features.push(feature)
   }
 
+  /**
+   * 根据功能服务类构造函数获取功能服务实例
+   * @param service 功能服务类 class
+   * @returns 功能服务实例
+   */
   findService<T extends Class<BaseFeatureService>>(service: T): InstanceType<T> | undefined {
     return this._features.find(feature => feature instanceof (service as any)) as InstanceType<T>
   }
 
+  /**
+   * 获取所有的功能服务实例
+   * @returns 所有的功能服务实例数组
+   */
   getAllServices(): FeatureService<BaseFeatureServiceEvent>[] {
     return [...this._features]
   }

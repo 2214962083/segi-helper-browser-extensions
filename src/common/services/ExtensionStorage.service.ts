@@ -70,6 +70,7 @@ export interface ExtensionStorageServiceOptions {
 
 /**
  * 浏览器扩展存储服务
+ * 跟 localStorage 一样，只是 api 都是异步
  */
 export class ExtensionStorageService {
   static _instance: ExtensionStorageService
