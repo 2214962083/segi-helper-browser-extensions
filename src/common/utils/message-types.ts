@@ -27,7 +27,12 @@ export enum WebextMessageId {
   /**
    * 获取扩展资源 url
    */
-  getExtensionResourceUrl = 'getExtensionResourceUrl'
+  getExtensionResourceUrl = 'getExtensionResourceUrl',
+
+  /**
+   * 在 window context 执行脚本
+   */
+  runScriptInWindow = 'runScriptInWindow'
 }
 
 export interface WebextMessage {
@@ -42,4 +47,5 @@ export interface WebextMessage {
    * background 消息 id
    */
   [WebextMessageId.getExtensionResourceUrl]: GetProtocolFromFn<BrowserApiService['getExtensionResourceUrl']>
+  [WebextMessageId.runScriptInWindow]: GetProtocolFromFn<BrowserApiService['runScriptInWindow']>
 }

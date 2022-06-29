@@ -21,6 +21,40 @@ export class BrowserApiService {
   getExtensionResourceUrl(path: string): string {
     return browser.runtime.getURL(path)
   }
+
+  /**
+   * 在 window context 执行脚本
+   * @param payload 脚本内容
+   */
+  @OnMessage(WebextMessageId.runScriptInWindow)
+  async runScriptInWindow(payload: string) {
+    function injectPageScript(payload: string) {
+      const script = document.createElement('script')
+      script.setAttribute('type', 'text/javascript')
+      script.setAttribute('src', chrome.runtime.getURL('page-script.js'))
+      script.onload = () => {
+        /*
+         * Using document.dispatchEvent instead window.postMessage by security reason
+         * https://github.com/w3c/webextensions/issues/78#issuecomment-915272953
+         */
+        document.dispatchEvent(
+          new CustomEvent('message', {
+            detail: payload
+          })
+        )
+        document.head.removeChild(script)
+      }
+      document.head.appendChild(script)
+    }
+    const tab = (await browser?.tabs?.query?.({active: true, currentWindow: true}))?.[0]
+    if (!tab || !tab.id) throw new Error('未找到当前 tab')
+
+    return await browser.scripting.executeScript({
+      target: {tabId: tab.id},
+      func: injectPageScript,
+      args: [payload]
+    })
+  }
 }
 
 // 存储方法，由于 browser.storage.local 是 proxy ，用 object.keys 获取不了方法名称，所以列举出来

@@ -71,6 +71,30 @@ export const InjectScriptPlugin = (options: InjectScriptPluginOptions) => {
           outputInjectJsPath,
           `
 const win = top || window
+
+// 找到本 js 的 script 标签
+const segiInjectScript = win.document.querySelector('#segi-extension-inject-script')
+
+// 修复开发时 chrome.runtime.id 为空的问题
+if (typeof chrome != "object" || !chrome || !chrome.runtime || !chrome.runtime.id) {
+  if (!window.chrome) window.chrome = {}
+  if (!chrome.runtime) chrome.runtime = {}
+  if (!chrome.runtime.id) chrome.runtime = {
+    ...chrome.runtime,
+    get id() {
+      return segiInjectScript && segiInjectScript.dataset.extensionId
+    }
+  }
+}
+
+// 替换资源基础 url
+win.processInjectScriptHtml = html => {
+  if (!segiInjectScript) return html
+  const baseurl = segiInjectScript.dataset.baseurl
+  return html.replace(/"\\/assets\\//g,\`"\${baseurl}\`)
+}
+
+
 const processInjectScriptHtml = win.processInjectScriptHtml || (html => html)
 const htmlParser = new win.DOMParser()
 const htmlDoc = htmlParser.parseFromString(processInjectScriptHtml(${JSON.stringify(html)}), 'text/html')
