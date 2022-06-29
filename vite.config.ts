@@ -17,7 +17,7 @@ import {InjectScriptPlugin} from './scripts/vite-plugin-inject-script'
 
 const pathResolve = (..._path: string[]) => path.resolve(__dirname, ..._path)
 const isProd = process.env.BUILD_MODE === 'BUILD'
-const MANIFEST_VERSION = 2
+const MANIFEST_VERSION = 3
 
 // https://vitejs.dev/config/
 export default defineConfig(({mode}) => {

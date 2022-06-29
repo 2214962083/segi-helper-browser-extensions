@@ -76,7 +76,12 @@ export class UhomecpPreviewMenuFeatureService extends BaseFeatureService impleme
       // 菜单名字的 element 的 class name
       const menuClass = 'ddd'
 
-      if (!menuPopoverEl || !targetEl || !menuPopoverEl.contains(targetEl)) return
+      // 判断目标是否是菜单 element
+      const isMenuEl = (el: HTMLElement | null) =>
+        (el && el.classList.contains('cp') && el.querySelector('span.ddd')) ||
+        (el && el.classList.contains('ddd') && el.parentElement?.classList.contains('cp'))
+
+      if (!menuPopoverEl || !targetEl || !menuPopoverEl.contains(targetEl) || !isMenuEl(targetEl)) return stopPReview()
 
       // 菜单名字的父层 element
       const menuParent = targetEl.classList.contains(menuClass) ? targetEl.parentElement! : targetEl
@@ -118,7 +123,7 @@ export class UhomecpPreviewMenuFeatureService extends BaseFeatureService impleme
 
       // 监听鼠标点击菜单名字的父层 element 的事件
       menuParent.addEventListener('mousedown', stopPreviewListener)
-    }, 300)
+    }, 500)
 
     // 开启监听鼠标 hover 预览菜单功能
     const start = () => {

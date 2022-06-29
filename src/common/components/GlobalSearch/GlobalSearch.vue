@@ -111,7 +111,6 @@ const keywords = ref('')
 const {Ctrl_k, Tab, Shift_Tab} = useMagicKeys({
   passive: false,
   onEventFired(e) {
-    console.log(e)
     if (e.ctrlKey && e.key === 'k') e.preventDefault()
     if (e.key === 'Tab') visible.value && e.preventDefault()
   }
