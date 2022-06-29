@@ -5,6 +5,7 @@
       v-for="(setting, i) in settings"
       :key="i"
       class="setting-item border-b border-gray-100 cursor-pointer flex-shrink-0 h-12 flex items-center justify-between"
+      @click="switchSettingStatus(setting)"
     >
       <!-- 设置标题 -->
       <div class="setting-item-left text-14px">
@@ -12,7 +13,7 @@
       </div>
 
       <!-- 设置开关 -->
-      <div class="setting-item-right">
+      <div class="setting-item-right" @click.stop="() => {}">
         <el-switch v-model="setting.status" @change="handleStatusChange($event, setting.code)"></el-switch>
       </div>
     </div>
@@ -169,6 +170,17 @@ onMounted(() => {
   initSettings()
 })
 
+/**
+ * 切换功能设置开关
+ */
+function switchSettingStatus(setting: Setting) {
+  setting.status = !setting.status
+  handleStatusChange(setting.status, setting.code)
+}
+
+/**
+ * 当功能设置开关状态变化时
+ */
 function handleStatusChange(status: boolean, code: SettingCode) {
   console.log(`${code}`, status, featureCodeMap.get(code))
   status ? featureCodeMap.get(code)?.turnOn() : featureCodeMap.get(code)?.turnOff()

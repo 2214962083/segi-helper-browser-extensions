@@ -18,6 +18,13 @@ export class UhomecpGlobalSearchFeatureService extends BaseFeatureService implem
 
   async init(): Promise<void> {
     this.addMountedVueComponentTask(UhomecpGlobalSearch)
+    top?.addEventListener(
+      'keypress',
+      e => {
+        console.log('哈哈', e)
+      },
+      true
+    )
 
     await super.init()
 
