@@ -23,7 +23,7 @@
 
     <!-- 右边操作按钮区 -->
     <div class="flex flex-shrink-0 h-full items-center">
-      <el-button class="ml-2" size="small" @click.prevent="focusUhomecpMenu(menu)">聚焦</el-button>
+      <el-button class="ml-2" size="small" @click.stop="focusUhomecpMenu(menu)">聚焦</el-button>
     </div>
   </div>
 </template>

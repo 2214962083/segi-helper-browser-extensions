@@ -6,7 +6,7 @@ import 'uno.css'
 import {initFeatureService} from '@/common/services/features'
 
 async function main() {
-  await initFeatureService()
+  initFeatureService()
   createApp(App).mount('#app')
 }
 main()

@@ -248,6 +248,9 @@ export class BaseFeatureService<T extends BaseFeatureServiceEvent = BaseFeatureS
     // 如果网站不在名单内，则不加载
     if (!this.shouldRunInCurrentSite()) return false
 
+    // 注入 css 文件，里面做了防止重复注入处理，不用担心重复
+    win?.segiHelperExtensionLoadStyle?.()
+
     // 执行所有挂载任务
     for (const task of this._mountedTasks) {
       await task.start()
