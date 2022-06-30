@@ -34,7 +34,13 @@ export class UhomecpGlobalSearchFeatureService extends BaseFeatureService implem
 
     const listenIframeElsAndEmitToTop = (iframeEls: HTMLIFrameElement[] | null): void => {
       iframeEls?.map(iframeEl => {
-        if (!iframeEl) return
+        // 是否是同源
+        const isSameOrigin = (iframe: HTMLIFrameElement) => {
+          const iframeOrigin = new URL(iframe.src, win.location.origin).origin
+          const topOrigin = win.location.origin
+          return iframeOrigin === topOrigin
+        }
+        if (!iframeEl || !isSameOrigin(iframeEl) || !iframeEl?.contentWindow) return
         // 如果不这样做，鼠标放 iframe 时，随便按下按键，都不会触发顶层 window 键盘事件
         iframeEl.contentWindow?.addEventListener(
           'keydown',
