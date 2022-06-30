@@ -94,7 +94,7 @@ const ManifestV3 = {
   background: {
     service_worker: 'src/entries/background/serviceWorker.ts'
   },
-  host_permissions: [...allowUrls],
+  // host_permissions: [...allowUrls],
   content_security_policy: {
     extension_pages:
       "script-src 'self' 'wasm-unsafe-eval'; default-src 'self'; img-src 'self' data:; connect-src https://* wss://* ; style-src 'self' 'unsafe-inline';"
