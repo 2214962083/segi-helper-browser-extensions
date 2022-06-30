@@ -58,8 +58,8 @@ export class CollectMenuService extends EventEmitter<CollectMenuServiceEvents> {
   /**
    * 广播更新事件
    */
-  private async _onUpdate() {
-    this.emit('update', await this.getAllMenus())
+  private _onUpdate() {
+    this.emit('update', this.getAllMenus())
   }
 
   /**
@@ -68,7 +68,7 @@ export class CollectMenuService extends EventEmitter<CollectMenuServiceEvents> {
   async loadData() {
     this._data = (await this._extensionStorageService.getItem(CollectMenuService._storageKey)) ?? []
     console.log('loadData', this._data)
-    return await this._onUpdate()
+    return this._onUpdate()
   }
 
   /**
@@ -82,8 +82,7 @@ export class CollectMenuService extends EventEmitter<CollectMenuServiceEvents> {
    * 是否存在菜单
    * @param menu 菜单信息
    */
-  async hasMenu(menu: CollectMenu): Promise<boolean> {
-    await this.init()
+  hasMenu(menu: CollectMenu): boolean {
     return this._data.some(item => item.id === menu.id)
   }
 
@@ -92,8 +91,6 @@ export class CollectMenuService extends EventEmitter<CollectMenuServiceEvents> {
    * @param menu 菜单信息
    */
   async addMenu(menu: SetRequired<Partial<CollectMenu>, 'name' | 'url'>): Promise<boolean> {
-    await this.init()
-
     const buildMenu = {...menu} as CollectMenu
 
     // 如果不存在 id 则生成一个
@@ -102,13 +99,13 @@ export class CollectMenuService extends EventEmitter<CollectMenuServiceEvents> {
     // 如果不存在 pathName 则使用菜单名称作为路径名称
     buildMenu.pathName = buildMenu.pathName || buildMenu.name
 
-    if (await this.hasMenu(buildMenu)) return false
+    if (this.hasMenu(buildMenu)) return false
 
     // 添加到数组头部中，以便把最新展示在前面
     this._data.unshift(menu as CollectMenu)
 
     await this.saveData()
-    await this._onUpdate()
+    this._onUpdate()
 
     return true
   }
@@ -119,14 +116,12 @@ export class CollectMenuService extends EventEmitter<CollectMenuServiceEvents> {
    * @param isCover 是否覆盖原有数据，默认为 false
    */
   async updateMenu(menu: CollectMenu, isCover = false): Promise<boolean> {
-    await this.init()
-
     const index = this._data.findIndex(item => item.id === menu.id)
     if (index === -1) return false
 
     this._data[index] = isCover ? menu : {...this._data[index], ...menu}
     await this.saveData()
-    await this._onUpdate()
+    this._onUpdate()
 
     return true
   }
@@ -136,15 +131,13 @@ export class CollectMenuService extends EventEmitter<CollectMenuServiceEvents> {
    * @param menu 菜单信息
    */
   async removeMenu(menu: CollectMenu): Promise<boolean> {
-    await this.init()
-
     const index = this._data.findIndex(item => item.id === menu.id)
     if (index === -1) return false
 
     this._data.splice(index, 1)
 
     await this.saveData()
-    await this._onUpdate()
+    this._onUpdate()
 
     return true
   }
@@ -154,20 +147,16 @@ export class CollectMenuService extends EventEmitter<CollectMenuServiceEvents> {
    * @param menus 菜单信息
    */
   async removeManyMenus(menus: CollectMenu[]): Promise<void> {
-    await this.init()
-
     const removeIds = menus.map(item => item.id)
     this._data = this._data.filter(item => !removeIds.includes(item.id))
     await this.saveData()
-    await this._onUpdate()
+    this._onUpdate()
   }
 
   /**
    * 获取所有收藏菜单
    */
-  async getAllMenus(): Promise<CollectMenu[]> {
-    await this.init()
-
+  getAllMenus(): CollectMenu[] {
     return this._data.map(item => ({...item}))
   }
 }
