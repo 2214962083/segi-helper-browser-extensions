@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import {
   BaseFeatureService,
+  DocleverGlobalSearchFeatureService,
   FeaturesManager,
   GitlabGlobalSearchFeatureService,
   GitlabViewerFeatureService,
@@ -55,7 +56,12 @@ enum SettingCode {
   /**
    * gitlab 代码浏览功能开关
    */
-  gitlabFileViewer = 'gitlabFileViewer'
+  gitlabFileViewer = 'gitlabFileViewer',
+
+  /**
+   * doclever 全局搜索功能开关
+   */
+  docleverGlobalSearch = 'docleverGlobalSearch'
 }
 
 interface Setting {
@@ -96,6 +102,11 @@ const settings = ref<Setting[]>([
     title: 'gitlab 代码侧栏树和染色',
     code: SettingCode.gitlabFileViewer,
     status: true
+  },
+  {
+    title: 'doclever 全局搜索',
+    code: SettingCode.docleverGlobalSearch,
+    status: true
   }
 ])
 
@@ -125,6 +136,10 @@ const {init: initSettings} = useInit({
       {
         code: SettingCode.gitlabFileViewer,
         featureConstructor: GitlabViewerFeatureService
+      },
+      {
+        code: SettingCode.docleverGlobalSearch,
+        featureConstructor: DocleverGlobalSearchFeatureService
       }
     ]
 

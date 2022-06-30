@@ -84,7 +84,9 @@ export function useStorage(key: string | number | object, type: StorageType | nu
   const cacheKey = valToHash(key)
 
   const setValue = <T = any>(val: T, timeout: number | null = null) => {
-    return storage?.set(cacheKey, val, timeout)
+    // stoor bug， 他的 getValue 判断相反了
+    const finalTimeout = timeout === null || timeout === undefined ? null : -1 * timeout
+    return storage?.set(cacheKey, val, finalTimeout)
   }
 
   const getValue = <T = any>(defaultValue?: T): T | undefined => {

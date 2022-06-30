@@ -22,8 +22,8 @@
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky install",
     "release": "esno ./scripts/release.ts",
-    "serve:firefox": "web-ext run --start-url \"http://beta.uhomecp.com/web/portal/#/home\" --start-url \"http://192.168.1.6:9200/\"  --source-dir ./dist/",
-    "serve:chrome": "web-ext run -t chromium --start-url \"http://beta.uhomecp.com/web/portal/#/home\"  --start-url \"http://192.168.1.6:9200/\"  --source-dir ./dist/",
+    "serve:firefox": "web-ext run --start-url \"http://beta.uhomecp.com/web/portal/#/home\" --start-url \"http://192.168.1.6:9200/\" --start-url \"http://192.168.1.11:9090/html/web/controller/console/console.html\" --source-dir ./dist/",
+    "serve:chrome": "web-ext run -t chromium --start-url \"http://beta.uhomecp.com/web/portal/#/home\"  --start-url \"http://192.168.1.6:9200/\" --start-url \"http://192.168.1.11:9090/html/web/controller/console/console.html\" --source-dir ./dist/",
     "start:firefox": "concurrently -k -c \"npm:watch\" \"npm:serve:firefox\" ",
     "start:chrome": "concurrently -k -c \"npm:watch\" \"npm:serve:chrome\" ",
     "watch": "cross-env BUILD_MODE=WATCH vite build --watch"

@@ -38,6 +38,7 @@
           :tab="tab"
           :keywords="keywords"
           :item-height="itemHeight"
+          :item-class="itemClass"
         >
           <template #default="{item, index, list}">
             <slot :name="tab.slotName" :tab="tab" :item="item" :index="index" :list="list"></slot>
@@ -87,6 +88,14 @@ const props = defineProps({
   itemHeight: {
     type: Number,
     default: 64
+  },
+
+  /**
+   * 列表项类名
+   */
+  itemClass: {
+    type: String,
+    default: ''
   }
 })
 

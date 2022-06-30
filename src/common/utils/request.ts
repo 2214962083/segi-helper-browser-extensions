@@ -75,7 +75,7 @@ export async function http<ResultType = any>(input: RequestInfo | URL, options?:
 
   if (typeof formatResult === 'object' && hasOwnKey(formatResult as Record<string, any>, 'code')) {
     const {code, message, msg} = formatResult as unknown as {code: string | number; message?: string; msg?: string}
-    if (String(code) !== '0') {
+    if (String(code) !== '0' && String(code) !== '200') {
       if (message) {
         errorMsg = message
       } else if (msg) {

@@ -19,7 +19,8 @@ slot
           :class="[
             activeIndex === item.index
               ? 'global-search-listbox-item-active border-dark-800 bg-gray-100'
-              : 'border-transparent'
+              : 'border-l-transparent',
+            itemClass
           ]"
           :data-index="item.index"
           class="global-search-listbox-item cursor-pointer py-12px px-16px border-l-2px w-full flex items-center justify-between"
@@ -53,7 +54,7 @@ slot
 import {computed, nextTick, PropType, ref, toRefs} from 'vue'
 import {vElementHover} from '@vueuse/components'
 import {onKeyStroke, useEventListener, useVirtualList, watchDebounced} from '@vueuse/core'
-import {sleep} from '@/common/utils/common'
+import {sleep, toastError} from '@/common/utils/common'
 import {GlobalSearchFetchFn, GlobalSearchTab} from './GlobalSearch.types'
 
 const props = defineProps({
@@ -92,6 +93,14 @@ const props = defineProps({
   itemHeight: {
     type: Number,
     default: 64
+  },
+
+  /**
+   * 列表项类名
+   */
+  itemClass: {
+    type: String,
+    default: ''
   }
 })
 
@@ -280,9 +289,12 @@ watchDebounced(
     }
     loading.value = true
 
-    searchResult.value = await props.searchFn(words, props.tab).finally(() => {
-      loading.value = false
-    })
+    searchResult.value = await props
+      .searchFn(words, props.tab)
+      .catch(err => toastError(err) && [])
+      .finally(() => {
+        loading.value = false
+      })
 
     lastFetchKeywords.value = words
   },

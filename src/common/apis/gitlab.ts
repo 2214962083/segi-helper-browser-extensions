@@ -72,7 +72,7 @@ export const fetchFileTree = (options: FetchFileTreeOptions): Promise<FetchFileT
   return http(url, {
     cacheSessionStorage: true,
     formatType: 'json',
-    resolveCondition: data => Array.isArray(data)
+    resolveCondition: res => Array.isArray(res)
   })
 }
 
@@ -209,6 +209,6 @@ export const searchReposByName = (options: SearchReposOptions): Promise<RemoteGi
   return http(url, {
     cacheSessionStorage: true,
     formatType: 'json',
-    resolveCondition: data => Array.isArray(data)
+    resolveCondition: res => Array.isArray(res)
   })
 }
