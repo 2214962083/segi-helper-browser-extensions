@@ -11,8 +11,8 @@ export class DocleverGlobalSearchFeatureService extends BaseFeatureService imple
   constructor(options?: DocleverGlobalSearchFeatureServiceOptions) {
     super({
       storageKeyPrefix: DOCLEVER_GLOBAL_SEARCH_STORAGE_NAMESPACE,
-      defaultIncludeSites: ['192.168.1.11:9090'],
-      defaultExcludeSites: ['192.168.1.11:9090/html/web/controller/login/login.html'],
+      defaultIncludeSites: ['192.168.1.10:9090', '192.168.1.11:9090'],
+      defaultExcludeSites: ['/html/web/controller/login/login.html'],
       ...options
     })
   }
