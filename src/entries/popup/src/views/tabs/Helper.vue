@@ -12,6 +12,9 @@
             4、在浏览 gitlab 某个仓库时，会在左侧生成文件侧栏树，方便浏览文件，并且使用 vscode
             同款染色代码，可以点击侧栏左上角固定侧栏或全屏浏览代码
           </li>
+          <li class="mb-4">
+            5、在浏览 doclever api 平台时，可以按 ctrl + k 键呼出全局搜索，可以根据接口名字或接口 url 搜索接口。
+          </li>
         </ul>
       </el-collapse-item>
       <el-collapse-item title="全局搜索快捷键小技巧" name="2">
