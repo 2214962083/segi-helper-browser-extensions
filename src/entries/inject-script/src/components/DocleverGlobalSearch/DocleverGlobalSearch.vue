@@ -29,6 +29,7 @@ import {DocleverService, DocleverTreeItem} from '../../services/Doclever.service
 import {useInit} from '../../hooks/useInit'
 import {useLocalRef} from '@/common/hooks/useLocalRef'
 import {win} from '../../utils/common'
+import {docleverBaseUrl} from '@/common/apis/doclever'
 
 // 当前 tab 索引
 const activeTabIndex = ref(0)
@@ -79,6 +80,6 @@ const searchFn: GlobalSearchFetchFn = async (keywords: string, tab: GlobalSearch
  */
 function openApiPage(docleverItem: DocleverTreeItem) {
   console.log('docleverItem', docleverItem)
-  win.open(`http://192.168.1.11:9090/html/web/controller/share/share.html#${docleverItem._id}`, '_blank')
+  win.open(`${docleverBaseUrl}/html/web/controller/share/share.html#${docleverItem._id}`, '_blank')
 }
 </script>
