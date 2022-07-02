@@ -40,7 +40,7 @@ const sharedManifest: SharedManifest = {
     open_in_tab: true // 是否在新标签页打开
   },
   // 权限列表
-  permissions: ['storage', 'tabs', 'contextMenus', 'notifications', 'activeTab'],
+  permissions: ['storage', 'tabs', 'activeTab'],
   // 声明哪些扩展、app、网页可以连接此扩展通信
   externally_connectable: {
     ids: ['*'],
