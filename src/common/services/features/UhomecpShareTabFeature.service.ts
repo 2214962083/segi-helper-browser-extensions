@@ -36,19 +36,6 @@ export class UhomecpShareTabFeatureService extends BaseFeatureService implements
 
     const processTabEls = (tabEls: HTMLElement[]) => {
       tabEls.map(tabEl => {
-        // tab 信息
-        const tabData = tabEl.querySelector('.star-kbua')?.__vue__?.$parent?.tabData as
-          | (RemoteUhomecpMenu & {title: string; uuid: string})
-          | undefined
-
-        if (!tabData) return
-
-        // tab 标题
-        const tabTitle = tabData.title || tabData.customResName || tabData.resName
-
-        // tab url
-        // const tabUrl = tabData.url
-
         // tab 共享 icon
         const shareIcon = win.document.createElement('div')
 
@@ -72,6 +59,23 @@ export class UhomecpShareTabFeatureService extends BaseFeatureService implements
         shareIcon.addEventListener('click', e => {
           e.preventDefault()
           e.stopPropagation()
+
+          // tab 信息
+          const tabData = tabEl.querySelector('.star-kbua')?.__vue__?.$parent?.tabData as
+            | (RemoteUhomecpMenu & {title: string; uuid: string})
+            | undefined
+
+          if (!tabData)
+            return ElNotification.error({
+              title: '复制失败',
+              message: '找不到 tab 具体数据'
+            })
+
+          // tab 标题
+          const tabTitle = tabData.title || tabData.customResName || tabData.resName
+
+          // tab url
+          // const tabUrl = tabData.url
 
           // tab 对应的 iframe
           const tabIframe = win.document.querySelector<HTMLIFrameElement>(`iframe[name*="_${tabData.uuid}"]`)
