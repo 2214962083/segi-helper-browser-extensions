@@ -29,6 +29,11 @@ export const UHOMECP_PREVIEW_MENU_STORAGE_NAMESPACE = 'UhomecpPreviewMenuFeature
 export const UHOMECP_GLOBAL_SEARCH_STORAGE_NAMESPACE = 'UhomecpGlobalSearchFeatureService'
 
 /**
+ * uhomecp  分享 tab 功能缓存命名空间
+ */
+export const UHOMECP_SHARE_TAB_STORAGE_NAMESPACE = 'UhomecpShareTabFeatureService'
+
+/**
  * doclever 全局搜索功能缓存命名空间
  */
 export const DOCLEVER_GLOBAL_SEARCH_STORAGE_NAMESPACE = 'DocleverGlobalSearchFeatureService'

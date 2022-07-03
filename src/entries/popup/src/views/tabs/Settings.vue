@@ -28,7 +28,8 @@ import {
   GitlabGlobalSearchFeatureService,
   GitlabViewerFeatureService,
   UhomecpGlobalSearchFeatureService,
-  UhomecpPreviewMenuFeatureService
+  UhomecpPreviewMenuFeatureService,
+  UhomecpShareTabFeatureService
 } from '@/common/services/features'
 import {useInit} from '@/entries/inject-script/src/hooks/useInit'
 import {Class} from 'type-fest'
@@ -47,6 +48,11 @@ enum SettingCode {
    * uhomecp 预览功能开关
    */
   uhomecpMenuPreview = 'uhomecpMenuPreview',
+
+  /**
+   * uhomecp 分享 tab 给队友
+   */
+  uhomecpShareTab = 'uhomecpShareTab',
 
   /**
    * gitlab 全局搜索功能开关
@@ -94,6 +100,11 @@ const settings = ref<Setting[]>([
     status: true
   },
   {
+    title: 'uhomecp 分享 tab 给队友',
+    code: SettingCode.uhomecpShareTab,
+    status: true
+  },
+  {
     title: 'gitlab 全局搜索',
     code: SettingCode.gitlabGlobalSearch,
     status: true
@@ -128,6 +139,10 @@ const {init: initSettings} = useInit({
       {
         code: SettingCode.uhomecpMenuPreview,
         featureConstructor: UhomecpPreviewMenuFeatureService
+      },
+      {
+        code: SettingCode.uhomecpShareTab,
+        featureConstructor: UhomecpShareTabFeatureService
       },
       {
         code: SettingCode.gitlabGlobalSearch,

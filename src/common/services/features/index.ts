@@ -4,6 +4,7 @@ import {GitlabGlobalSearchFeatureService} from './GitlabGlobalSearchFeature.serv
 import {GitlabViewerFeatureService} from './GitlabViewerFeature.service'
 import {UhomecpGlobalSearchFeatureService} from './UhomecpGlobalSearchFeature.service'
 import {UhomecpPreviewMenuFeatureService} from './UhomecpPreviewMenuFeature.service'
+import {UhomecpShareTabFeatureService} from './UhomecpShareTabFeature.service'
 
 export * from './BaseFeature.service'
 export * from './GitlabViewerFeature.service'
@@ -11,6 +12,7 @@ export * from './GitlabGlobalSearchFeature.service'
 export * from './UhomecpPreviewMenuFeature.service'
 export * from './UhomecpGlobalSearchFeature.service'
 export * from './DocleverGlobalSearchFeature.service'
+export * from './UhomecpShareTabFeature.service'
 
 /**
  * 初始化所有功能
@@ -23,6 +25,7 @@ export async function initFeatureService() {
   featuresManager.addFeature(new UhomecpPreviewMenuFeatureService())
   featuresManager.addFeature(new UhomecpGlobalSearchFeatureService())
   featuresManager.addFeature(new DocleverGlobalSearchFeatureService())
+  featuresManager.addFeature(new UhomecpShareTabFeatureService())
   await featuresManager.init()
   return featuresManager
 }

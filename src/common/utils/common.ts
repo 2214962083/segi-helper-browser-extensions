@@ -152,3 +152,40 @@ export function useAppContainer(className?: string) {
 export function getTextBytes(text: string) {
   return new TextEncoder().encode(text)?.length ?? 0
 }
+
+/**
+ * 复制文本到剪贴板
+ * @param text 文本
+ * @param success 成功回调
+ * @param fail 失败回调
+ */
+export function copyToClipboard(text: string, success?: () => void, fail?: () => void) {
+  const win = top || window
+  if (!win) return
+  // @ts-ignore
+  if (win.clipboardData && win.clipboardData.setData) {
+    // Internet Explorer 特定的代码路径，以防止在对话框可见时显示文本区域。
+    // @ts-ignore
+    win.clipboardData.setData('Text', text)
+    success?.()
+    return
+  } else if (document?.queryCommandSupported?.('copy')) {
+    const textarea = document.createElement('textarea')
+    textarea.textContent = text
+    textarea.style.position = 'fixed' // Prevent scrolling to bottom of page in Microsoft Edge.
+    document.body.appendChild(textarea)
+    textarea.select()
+    try {
+      document.execCommand?.('copy') // Security exception may be thrown by some browsers.
+      success?.()
+      return
+    } catch (ex) {
+      toastError('复制失败，请手动复制')
+      fail?.()
+      win.prompt?.('按 Ctrl/Cmd+C 复制', text)
+      return false
+    } finally {
+      document.body.removeChild(textarea)
+    }
+  }
+}
