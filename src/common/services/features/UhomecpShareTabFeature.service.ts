@@ -46,7 +46,7 @@ export class UhomecpShareTabFeatureService extends BaseFeatureService implements
           position: 'absolute',
           right: '1rem',
           top: '1rem',
-          zIndex: '999',
+          zIndex: '1',
           cursor: 'pointer'
         })
 
