@@ -102,7 +102,8 @@ export class UhomecpShareTabFeatureService extends BaseFeatureService implements
           const shareCode = `
 /**
  * 我分享了一个 uhomecp tab 页给你
- * 复制这段代码，打开浏览器，按 F12 打开控制台，粘贴执行下面的代码
+ * 复制这段代码，在浏览器打开 ${win.location.origin}
+ * 然后按 F12 打开控制台，粘贴执行下面的代码
  * 根据勾股定理，一般情况下是可以执行成功的，如果不能，那就是量子力学的问题了
  */
 const title = ${JSON.stringify(titleForOpenPortalMenu)}
