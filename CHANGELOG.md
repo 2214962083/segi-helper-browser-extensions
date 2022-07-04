@@ -1,8 +1,4 @@
-## [1.0.3](https://github.com/2214962083/segi-helper-browser-extensions/compare/v1.0.2...v1.0.3) (2022-07-04)
-
-## [1.0.2](https://github.com/2214962083/segi-helper-browser-extensions/compare/v1.0.1...v1.0.2) (2022-07-04)
-
-## [1.0.1](https://github.com/2214962083/segi-helper-browser-extensions/compare/f479fb29ee75a95d8e5568c2a1fd646da402acd7...v1.0.1) (2022-07-04)
+# 1.0.0 (2022-07-04)
 
 ### Bug Fixes
 
