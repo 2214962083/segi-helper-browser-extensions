@@ -42,4 +42,4 @@ jobs:
         with:
           body_path: RELEASE-NOTE.md
           files: |
-            extensions/extensions.*
+            extension/extension.*
