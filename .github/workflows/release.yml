@@ -6,16 +6,14 @@ on:
       - 'v*'
 
 jobs:
-  release:
+  build:
     runs-on: ubuntu-latest
     env:
       NODE_OPTIONS: '--max_old_space_size=4096'
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Install Pnpm
-        uses: pnpm/action-setup@v2.2.1
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Use Node.js v16
         uses: actions/setup-node@v2
@@ -23,6 +21,9 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
           cache: pnpm
+
+      - name: Install Pnpm
+        uses: pnpm/action-setup@v2.2.1
 
       - name: Install Dependencies
         run: pnpm i
@@ -35,6 +36,7 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           body_path: RELEASE-NOTE.md
           files: |
