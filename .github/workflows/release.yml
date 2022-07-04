@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: '--max_old_space_size=4096'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install Pnpm
+        uses: pnpm/action-setup@v2.2.1
+
+      - name: Use Node.js v16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm i
+
+      - name: Build And Pack All
+        run: pnpm run pack:all
+
+      # - run: npx conventional-github-releaser -p angular
+      #   continue-on-error: true
+      #   env:
+      #     CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Generate Release Note
+        run: npx conventional-changelog -p angular -i RELEASE-NOTE.md -s -r 2
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: RELEASE-NOTE.md
+          files: |
+            extensions/extensions.*

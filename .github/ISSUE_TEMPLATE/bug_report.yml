@@ -1,0 +1,37 @@
+name: "\U0001F41E Bug 报告"
+description: 报告 Segi-helper-browser-extensions 的问题
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您花时间填写此错误报告！
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: bug 描述
+      description: 清晰简洁地描述错误是什么。如果您打算为此问题提交 PR，请在描述中告诉我们。谢谢！
+      placeholder: 请填入 bug 相关描述
+    validations:
+      required: true
+  - type: textarea
+    id: browser-info
+    attributes:
+      label: 浏览器信息
+      description: 浏览器名字和版本号，如 chrome@103.0.0
+      placeholder: 请输入浏览器名字和版本号
+    validations:
+      required: true
+  - type: checkboxes
+    id: checkboxes
+    attributes:
+      label: 验证
+      description: 在提交问题之前，请确保您执行以下操作
+      options:
+        - label: 遵守我们的 [行为准则](https://github.com/2214962083/segi-helper-browser-extensions/blob/master/CODE_OF_CONDUCT.md)。
+          required: true
+        - label: 阅读 [贡献指南](https://github.com/2214962083/segi-helper-browser-extensions/blob/master/CONTRIBUTING.md)。
+          required: true
+        - label: 检查 issue 是否已存在[该问题](https://github.com/2214962083/segi-helper-browser-extensions/issues) , 避免重复报告问题。
+          required: true
+        - label: 检查这是否是一个具体的错误。使用上的问答，请前往 [GitHub Discussion](https://github.com/2214962083/segi-helper-browser-extensions/discussions).
+          required: true

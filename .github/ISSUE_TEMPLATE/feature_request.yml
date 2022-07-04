@@ -1,0 +1,44 @@
+name: "\U0001F680 新功能提案"
+description: 提出要添加到 Segi-helper-browser-extensions 的新功能
+labels: ['feature request']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您对该项目的兴趣并花时间填写此功能报告！
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: 清晰简洁的问题描述
+      description: '我想要 [xxx功能] 以方便 [xxx]。如果您打算为此问题提交 PR，请在描述中告诉我们。谢谢！'
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-solution
+    attributes:
+      label: 建议的解决方案
+      description: '在模块 [xxx] 中，我们可以提供以下实现...'
+    validations:
+      required: true
+  - type: textarea
+    id: alternative
+    attributes:
+      label: 选择
+      description: 对您考虑过的任何替代解决方案或功能进行清晰简洁的描述。
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 附加内容
+      description: 此处有关功能请求的任何其他内容或屏幕截图。
+  - type: checkboxes
+    id: checkboxes
+    attributes:
+      label: 验证
+      description: 在提交问题之前，请确保您执行以下操作
+      options:
+        - label: 遵守我们的 [行为准则](https://github.com/2214962083/segi-helper-browser-extensions/blob/master/CODE_OF_CONDUCT.md)
+          required: true
+        - label: 阅读 [贡献指南](https://github.com/2214962083/segi-helper-browser-extensions/blob/master/CONTRIBUTING.md).
+          required: true
+        - label: 检查是否存在要求相同功能以避免创建重复的问题。
+          required: true
