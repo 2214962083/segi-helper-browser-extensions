@@ -6,7 +6,7 @@ const pathResolve = (..._path: string[]) => path.resolve(__dirname, ..._path)
 
 export function generateChangelog() {
   const pkgName = pkg.name
-  const cmd = `pnpm exec conventional-changelog -p angular -i CHANGELOG.md -s --commit-path . -l ${pkgName} -r 0`
+  const cmd = `pnpm exec conventional-changelog -p angular -i CHANGELOG.md -s -r 0`
   console.log('start run command: ', cmd)
   execSync(cmd, {stdio: 'inherit', cwd: pathResolve('../packages', pkgName)})
 }
