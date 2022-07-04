@@ -30,7 +30,9 @@
 
 1、在浏览 `uhomecp` 时，可以鼠标 hover 菜单并预览菜单。
 
-<img src="./docs/imgs/gifs/uhomecp-preview-menu.gif" style="height: 500px; margin-bottom: 40px; margin-top: 15px; border-radius: 8px;">
+<a href="./docs/imgs/gifs/uhomecp-preview-menu.gif">
+  <img src="./docs/imgs/gifs/uhomecp-preview-menu.gif" height="500px" width="auto" style="border-radius: 8px; margin-bottom: 40px; margin-top: 15px;">
+</a>
 
 2、在浏览 `uhomecp` 时，可以按 `ctrl + k` 键呼出全局搜索，可以根据菜单名字或菜单 url 搜索菜单。
 
