@@ -11,21 +11,46 @@
   </p>
 </div>
 
+## 目录
+
+- [目录](#目录)
+- [介绍](#介绍)
+- [安装教程](#安装教程)
+  - [在线安装](#在线安装)
+  - [本地安装](#本地安装)
+- [使用小技巧](#使用小技巧)
+  - [开关某个功能](#开关某个功能)
+  - [全局搜索小技巧](#全局搜索小技巧)
+- [贡献](#贡献)
+- [License](#license)
+
 ## 介绍
 
 **四格开发助手浏览器扩展** 是一个用于四格内部提高开发效率的浏览器扩展，它支持 `chrome` 和 `edge` 浏览器，它拥有以下功能：
 
 1、在浏览 `uhomecp` 时，可以鼠标 hover 菜单并预览菜单。
 
+<img src="./docs/imgs/gifs/uhomecp-preview-menu.gif" style="height: 500px; margin-bottom: 40px; margin-top: 15px; border-radius: 8px;">
+
 2、在浏览 `uhomecp` 时，可以按 `ctrl + k` 键呼出全局搜索，可以根据菜单名字或菜单 url 搜索菜单。
+
+<img src="./docs/imgs/gifs/uhomecp-global-search.gif" style="height: 500px; margin-bottom: 40px; margin-top: 15px; border-radius: 8px;">
 
 3、在浏览 `uhomecp` 时，可以按点击顶部 tab 左侧分享 icon 复制分享代码给队友打开同样的 tab。
 
+<img src="./docs/imgs/gifs/uhomecp-share-tab.gif" style="height: 500px; margin-bottom: 40px; margin-top: 15px; border-radius: 8px;"></img>
+
 4、在浏览 `gitlab` 时，可以按 `ctrl + k` 呼出全局搜索，可以搜仓库或当前仓库文件。
+
+<img src="./docs/imgs/gifs/gitlab-global-search.gif" style="height: 500px; margin-bottom: 40px; margin-top: 15px; border-radius: 8px;"></img>
 
 5、在浏览 `gitlab` 某个仓库时，会在左侧生成文件侧栏树，方便浏览文件，并且使用 `vscode` 同款染色代码，可以点击侧栏左上角固定侧栏或全屏浏览代码
 
+<img src="./docs/imgs/gifs/gitlab-file-viewer.gif" style="height: 500px; margin-bottom: 40px; margin-top: 15px; border-radius: 8px;"></img>
+
 6、在浏览 `doclever api` 平台时，可以按 `ctrl + k` 键呼出全局搜索，可以根据接口名字或接口 url 搜索接口。
+
+<img src="./docs/imgs/gifs/doclever-global-search.gif" style="height: 500px; margin-bottom: 40px; margin-top: 15px; border-radius: 8px;"></img>
 
 ## 安装教程
 
