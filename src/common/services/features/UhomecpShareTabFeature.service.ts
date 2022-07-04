@@ -3,6 +3,7 @@ import {UHOMECP_SHARE_TAB_STORAGE_NAMESPACE} from '@/common/utils/constants'
 import {RemoteUhomecpMenu} from '@/common/utils/type-helper'
 import {win} from '@/entries/inject-script/src/utils/common'
 import {ElNotification} from 'element-plus'
+import elementReady from 'element-ready'
 import {BaseFeatureService, BaseFeatureServiceOptions, FeatureService, FeatureTask} from './BaseFeature.service'
 
 export type UhomecpShareTabFeatureServiceOptions = Omit<BaseFeatureServiceOptions, 'storageKeyPrefix'>
@@ -34,6 +35,7 @@ export class UhomecpShareTabFeatureService extends BaseFeatureService implements
     let observe: MutationObserver
     let removeTask: Function[] = []
 
+    // 处理 tabs
     const processTabEls = (tabEls: HTMLElement[]) => {
       tabEls.map(tabEl => {
         // tab 共享 icon
@@ -122,8 +124,14 @@ top.openPortalMenu(url, title)`
       })
     }
 
-    const start = () => {
-      const tabWrapEl = win.document.querySelector('.tabs-pvh4 .transition-group-pvh4')
+    const start = async () => {
+      // 一直等到 tab 父盒子出现
+      const tabWrapEl = await elementReady('.tabs-pvh4 .transition-group-pvh4', {
+        target: win.document,
+        stopOnDomReady: false,
+        timeout: 30 * 1000
+      })
+
       if (!tabWrapEl) return
 
       const tabEls = Array.from(tabWrapEl.querySelectorAll<HTMLElement>('.tab-pvh4') ?? [])

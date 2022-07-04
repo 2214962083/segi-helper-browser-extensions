@@ -36,6 +36,7 @@
     "@vueuse/core": "^8.6.0",
     "crypto-js": "^4.1.1",
     "element-plus": "^2.2.5",
+    "element-ready": "^6.2.1",
     "eventemitter3": "^4.0.7",
     "highlight.js": "^11.5.1",
     "lodash-es": "^4.17.21",
