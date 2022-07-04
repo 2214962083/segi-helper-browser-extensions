@@ -13,8 +13,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: Install Pnpm
         uses: pnpm/action-setup@v2.2.1
@@ -31,11 +29,6 @@ jobs:
 
       - name: Build And Pack All
         run: pnpm run pack:all
-
-      # - run: npx conventional-github-releaser -p angular
-      #   continue-on-error: true
-      #   env:
-      #     CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Generate Release Note
         run: npx conventional-changelog -p angular -i RELEASE-NOTE.md -s -r 2
