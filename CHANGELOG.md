@@ -1,14 +1,4 @@
-## [1.0.6](https://github.com/2214962083/segi-helper-browser-extensions/compare/v1.0.5...v1.0.6) (2022-07-04)
-
-## [1.0.5](https://github.com/2214962083/segi-helper-browser-extensions/compare/v1.0.4...v1.0.5) (2022-07-04)
-
-## [1.0.4](https://github.com/2214962083/segi-helper-browser-extensions/compare/v1.0.3...v1.0.4) (2022-07-04)
-
-## [1.0.3](https://github.com/2214962083/segi-helper-browser-extensions/compare/v1.0.2...v1.0.3) (2022-07-04)
-
-## [1.0.2](https://github.com/2214962083/segi-helper-browser-extensions/compare/v1.0.1...v1.0.2) (2022-07-04)
-
-## [1.0.1](https://github.com/2214962083/segi-helper-browser-extensions/compare/f479fb29ee75a95d8e5568c2a1fd646da402acd7...v1.0.1) (2022-07-04)
+## 1.0.7 (2022-07-05)
 
 ### Bug Fixes
 
@@ -17,6 +7,7 @@
 - 修复 uhomecp 分享 tab 按钮不出来的 bug ([369c793](https://github.com/2214962083/segi-helper-browser-extensions/commit/369c79369e4ff7f5455987c727b372d122f87368))
 - 修复 uhomecp 共享 tab 分享 icon z-index 过高问题 ([00085e7](https://github.com/2214962083/segi-helper-browser-extensions/commit/00085e76160d2f099ddeb0a6f207e0804802a6c2))
 - 修复 uhomecp 冒泡 key 事件时 iframe 跨域问题 ([5e9020b](https://github.com/2214962083/segi-helper-browser-extensions/commit/5e9020b75e518d693f2a321626f530eff1afe685))
+- 修复 uhomecp tab share icon 偶尔不出现的 bug ([a529164](https://github.com/2214962083/segi-helper-browser-extensions/commit/a529164de8ed29776a8797264711c1d8e395f35a))
 - 修复菜单聚焦 bug ([0641279](https://github.com/2214962083/segi-helper-browser-extensions/commit/064127910c5977f0985e4181b8fe823dd3662246))
 - 修复扩展通讯问题 ([f2b4016](https://github.com/2214962083/segi-helper-browser-extensions/commit/f2b401638eaffcbf4abb52148b6e533974d187bc))
 
@@ -31,6 +22,7 @@
 - 添加 dev 扩展 url 打印 ([9ac79bd](https://github.com/2214962083/segi-helper-browser-extensions/commit/9ac79bd5cd651a6554461c1f9b4fcac21e6696b0))
 - 添加 doclever 全局搜索 ([96d48de](https://github.com/2214962083/segi-helper-browser-extensions/commit/96d48decce894cb6a27417757fdf56caaaefb126))
 - 添加 doclever 跳转 api 页面 ([3f6683d](https://github.com/2214962083/segi-helper-browser-extensions/commit/3f6683d355a5938de2bd0833b3ff83501fbf1cd2))
+- 添加 esc 推出全局搜索功能 ([35a311c](https://github.com/2214962083/segi-helper-browser-extensions/commit/35a311c8f754371f5543895be00ab2f9b5c98de7))
 - 添加 gitlab 文件树侧栏 ([797ab46](https://github.com/2214962083/segi-helper-browser-extensions/commit/797ab46de06836cd6c8224c60ed5455b3b7a2d40))
 - 添加 gitlab file viewer ([d3146f7](https://github.com/2214962083/segi-helper-browser-extensions/commit/d3146f7c83fbf89f441f088e4a5d516eae62f760))
 - 添加 inject-script 页面编译与注入，共享页面同一个上下文 window ([7be7a58](https://github.com/2214962083/segi-helper-browser-extensions/commit/7be7a58b402d6fc07b8025e8b195eb2ef73b18e9))
@@ -56,3 +48,4 @@
 - 完善帮助页 ([ddb51c7](https://github.com/2214962083/segi-helper-browser-extensions/commit/ddb51c753b287cf8eb38951fcc4448e0fd599e03))
 - 完善注释 ([96f401a](https://github.com/2214962083/segi-helper-browser-extensions/commit/96f401afca22cda16d2124709a5f412c6326810f))
 - 支持 manifest v3 ([95d2e96](https://github.com/2214962083/segi-helper-browser-extensions/commit/95d2e96290f19c42961b1656f08c83bd64709e1b))
+- uhomecp 分享 tab code 增加提示 ([90e0ee2](https://github.com/2214962083/segi-helper-browser-extensions/commit/90e0ee2443e957cf8a47fd5da1e7767aef12b80d))
