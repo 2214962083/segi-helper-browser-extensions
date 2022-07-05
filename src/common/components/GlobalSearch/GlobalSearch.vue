@@ -117,7 +117,7 @@ const keywords = ref('')
 
 // 监听键盘组合键
 // see: https://vueuse.org/core/useMagicKeys/
-const {Ctrl_k, Tab, Shift_Tab} = useMagicKeys({
+const {Ctrl_k, Tab, Shift_Tab, Escape} = useMagicKeys({
   passive: false,
   onEventFired(e) {
     if (e.ctrlKey && e.key === 'k') e.preventDefault()
@@ -138,6 +138,11 @@ onClickOutside(searchPanelDom, () => {
 watch(Ctrl_k, val => {
   if (!val) return
   visible.value = !visible.value
+})
+
+watch(Escape, val => {
+  if (!val) return
+  visible.value = false
 })
 
 /**

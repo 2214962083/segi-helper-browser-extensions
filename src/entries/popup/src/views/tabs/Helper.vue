@@ -27,7 +27,7 @@
           <li class="mb-4">3、可以按 shift + tab 键向左切换搜索 tab</li>
           <li class="mb-4">4、可以按上下键在搜索结果移动</li>
           <li class="mb-4">5、可以按 enter 键确认选择搜索结果</li>
-          <li class="mb-4">6、再次按 ctrl + k 可以关闭全局搜索</li>
+          <li class="mb-4">6、按 Esc 键或再次按 ctrl + k 可以关闭全局搜索</li>
         </ul>
       </el-collapse-item>
     </el-collapse>
