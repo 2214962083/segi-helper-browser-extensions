@@ -5,10 +5,13 @@ slot
     v-show="visible && searchResult.length"
     v-bind="$attrs"
     ref="resultDom"
-    class="global-search-result max-h-400px relative overflow-auto"
+    max-h-400px
+    relative
+    overflow-auto
+    class="global-search-result"
   >
     <!-- 列表容器 -->
-    <div v-bind="listContainerProps" class="global-search-listbox-container max-h-400px w-full">
+    <div v-bind="listContainerProps" max-h-400px w-full class="global-search-listbox-container">
       <!-- 列表包裹 -->
       <div v-bind="wrapperProps" class="global-search-listbox">
         <!-- 列表项 -->
@@ -23,7 +26,15 @@ slot
             itemClass
           ]"
           :data-index="item.index"
-          class="global-search-listbox-item cursor-pointer py-12px px-16px border-l-2px w-full flex items-center justify-between"
+          cursor-pointer
+          py-12px
+          px-16px
+          border-l-2px
+          w-full
+          flex
+          items-center
+          justify-between
+          class="global-search-listbox-item"
           :style="{
             height: itemHeight + 'px'
           }"
@@ -37,13 +48,23 @@ slot
   <div
     v-show="visible && loading"
     v-loading="loading"
-    class="global-search-loading h-400px w-full flex justify-center items-center"
+    h-400px
+    w-full
+    flex
+    justify-center
+    items-center
+    class="global-search-loading"
   ></div>
 
   <!-- 无数据 -->
   <div
     v-show="visible && !loading && !searchResult.length"
-    class="global-search-empty h-400px w-full flex justify-center items-center"
+    h-400px
+    w-full
+    flex
+    justify-center
+    items-center
+    class="global-search-empty"
   >
     啥也没有
   </div>

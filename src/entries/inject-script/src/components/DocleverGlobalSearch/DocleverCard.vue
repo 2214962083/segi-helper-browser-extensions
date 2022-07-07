@@ -1,9 +1,9 @@
 <template>
-  <div class="w-full h-full flex flex-col justify-center text-12px break-words">
+  <div w-full h-full flex flex-col justify-center text-12px break-words>
     <div>
       {{ doclever.fullPathName }}
     </div>
-    <div class="mt-2 text-14px">
+    <div mt-2 text-14px>
       {{ doclever.apiUrl }}
     </div>
   </div>

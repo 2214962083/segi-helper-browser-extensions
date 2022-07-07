@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-full flex justify-center text-14px">
-    <div class="h-full flex-1 flex items-center">
+  <div w-full h-full flex justify-center text-14px>
+    <div h-full flex-1 flex items-center>
       {{ menu.pathName }}
 
       <!-- hover 显示菜单 json 数据 -->
@@ -11,7 +11,7 @@
         :fallback-placements="['bottom', 'top', 'right', 'left']"
       >
         <template #reference>
-          <el-icon class="ml-2 mr-8 cursor-pointer" :size="18">
+          <el-icon ml-2 mr-8 cursor-pointer :size="18">
             <WarningFilled class="text-gray-200" />
           </el-icon>
         </template>
@@ -22,7 +22,7 @@
     </div>
 
     <!-- 右边操作按钮区 -->
-    <div class="flex flex-shrink-0 h-full items-center">
+    <div flex flex-shrink-0 h-full items-center>
       <el-button class="ml-2" size="small" @click.stop="focusUhomecpMenu(menu)">聚焦</el-button>
     </div>
   </div>

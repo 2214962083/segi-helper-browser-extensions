@@ -1,12 +1,30 @@
 <template>
   <div
     v-show="visible"
-    class="global-search-container fixed z-99999999 flex items-start justify-center w-full inset-0 px-4 pb-4 pt-14vh"
+    fixed
+    z-99999999
+    flex
+    items-start
+    justify-center
+    w-full
+    inset-0
+    px-4
+    pb-4
+    pt-14vh
+    class="global-search-container"
   >
     <!-- 主体框 -->
     <div
       ref="searchPanelDom"
-      class="global-search-body max-w-600px w-full bg-white text-gray-800 rounded-8px overflow-hidden shadow-normal pointer-events-auto"
+      max-w-600px
+      w-full
+      bg-white
+      text-gray-800
+      rounded-8px
+      overflow-hidden
+      shadow-normal
+      pointer-events-auto
+      class="global-search-body"
     >
       <!-- 输入框 -->
       <el-input
@@ -18,11 +36,18 @@
       ></el-input>
 
       <!-- tabs -->
-      <div class="global-search-tabs w-full flex items-center">
+      <div class="global-search-tabs" w-full flex items-center>
         <div
           v-for="(tab, tabIndex) in tabs"
           :key="tabIndex"
-          class="global-search-tab cursor-pointer flex justify-center items-center !px-4 !py-2 border-b-2px hover:bg-gray-100"
+          cursor-pointer
+          flex
+          justify-center
+          items-center
+          px-4
+          py-2
+          border-b-2px
+          class="global-search-tab hover:bg-gray-100"
           :class="[tabIndex === activeTabIndex ? 'text-gray-800 border-gray-800' : 'text-gray-400 border-transparent']"
           @click="emit('update:activeTabIndex', tabIndex)"
         >
